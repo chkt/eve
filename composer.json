@@ -1,0 +1,37 @@
+{
+	"name" : "chkt/eve",
+	"description" : "Factory, Dependency Injection, Dependency Container, Locator",
+	"license" : "MIT",
+
+	"keywords" : [
+		"Factory",
+		"Dependency Injection",
+		"DI",
+		"Dependency Container",
+		"Locator"
+	],
+
+	"authors" : [{
+		"name" : "Christoph Kettelhoit",
+		"email" : "ck@chkt.one",
+		"homepage" : "https://chkt.one",
+		"role" : "Developer"
+	}],
+
+	"autoload" : {
+		"psr-4" : {
+			"eve\\" : "source/"
+		}
+	},
+
+	"autoload-dev" : {
+		"psr-4" : {
+			"test\\" : "test/"
+		}
+	},
+
+	"require-dev" : {
+		"phpunit/phpunit" : "5.6.*",
+		"php-mock/php-mock-phpunit" : "1.1.*"
+	}
+}
