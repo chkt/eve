@@ -141,6 +141,22 @@ extends TestCase
 		$this->assertSame($provider, $locator->getItem('foo'));
 	}
 
+	public function testGetItem_invalidProvider() {
+		$injector = $this->_mockInjector([
+			'fooProvider' => new \stdClass()
+		]);
+		$driver = $this->_mockDriver($injector);
+
+		$locator = $this->_produceLocator($driver, [
+			'foo' => 'fooProvider'
+		]);
+
+		$this->expectException(\ErrorException::class);
+		$this->expectExceptionMessage('LOC not a provider "foo"');
+
+		$locator->getItem('foo');
+	}
+
 	public function testGetItem_noProvider() {
 		$locator = $this->_produceLocator();
 
