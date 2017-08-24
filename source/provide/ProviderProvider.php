@@ -52,8 +52,12 @@ implements ILocator
 		if (!array_key_exists($key, $this->_providers)) {
 			if (!array_key_exists($key, $this->_providerNames)) throw new \ErrorException(sprintf('LOC unknown provider "%s"', $key));
 
-			$this->_providers[$key] = $this->_injector->produce($this->_providerNames[$key], [ 'driver' => $this->_driver ]);
-		}		//TODO: test IProvider inheritance
+			$provider = $this->_injector->produce($this->_providerNames[$key], ['driver' => $this->_driver]);
+
+			if (!($provider instanceof IProvider)) throw new \ErrorException(sprintf('LOC not a provider "%s"', $key));
+
+			$this->_providers[$key] = $provider;
+		}
 
 		return $this->_providers[$key];
 	}
