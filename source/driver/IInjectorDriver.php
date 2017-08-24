@@ -7,20 +7,14 @@ use eve\common\IDriver;
 use eve\factory\IFactory;
 use eve\access\IItemAccessor;
 use eve\entity\IEntityParser;
-use eve\inject\IInjector;
-use eve\provide\ILocator;
 
 
 
 interface IInjectorDriver
-extends IDriver
+extends IDriver, IInjectorHost
 {
 
 	public function getHost() : IInjectorHost;
-
-	public function getInjector() : IInjector;
-
-	public function getLocator() : ILocator;
 
 
 	public function getFactory() : IFactory;
@@ -30,5 +24,5 @@ extends IDriver
 
 	public function getEntityParser() : IEntityParser;
 
-	public function getReferences() : IITemAccessor;
+	public function getReferences() : IItemAccessor;
 }
