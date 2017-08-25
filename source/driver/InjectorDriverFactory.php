@@ -32,7 +32,7 @@ implements ISimpleFactory
 			'factoryName' => \eve\factory\Factory::class,
 			'accessorFactoryName' => \eve\access\TraversableAccessorFactory::class,
 			'entityParserName' => \eve\entity\EntityParser::class,
-			'injectorName' => \eve\inject\Injector::class,
+			'injectorName' => \eve\inject\IdentityInjector::class,
 			'locatorName' => \eve\provide\ProviderProvider::class,
 			'resolvers' => [
 				IInjector::TYPE_INJECTOR => \eve\inject\resolve\HostResolver::class,
