@@ -2,6 +2,7 @@
 
 namespace eve\inject;
 
+use eve\access\IItemAccessor;
 use eve\driver\IInjectorDriver;
 use eve\inject\resolve\IInjectorResolver;
 
@@ -64,16 +65,21 @@ implements IInjector
 	}
 
 
-	public function produce(string $qname, array $config = []) {		//TODO: prevent dependency loops?
-		if (empty($qname)) throw new \ErrorException();
-
+	protected function _produceInstance(string $qname, IItemAccessor $access) {
 		$fab = $this->_fab;
 
-		if (!$fab->hasInterface($qname, IInjectable::class)) throw new \ErrorException(sprintf('INJ not injectable "%s"', $qname));
-
-		$deps = $fab->callMethod($qname, 'getDependencyConfig', [ $this->_access->instance($config) ]);
+		$deps = $fab->callMethod($qname, 'getDependencyConfig', [ $access ]);
 		$args = $this->_resolveDependencies($deps);
 
 		return $fab->newInstance($qname, $args);
+	}
+
+
+	public function produce(string $qname, array $config = []) {		//TODO: prevent dependency loops?
+		if (empty($qname)) throw new \ErrorException();
+
+		if (!$this->_fab->hasInterface($qname, IInjectable::class)) throw new \ErrorException(sprintf('INJ not injectable "%s"', $qname));
+
+		return $this->_produceInstance($qname, $this->_access->instance($config));
 	}
 }
