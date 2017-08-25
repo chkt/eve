@@ -8,7 +8,7 @@ use eve\common\ISimpleFactory;
 use eve\access\IItemMutator;
 use eve\access\TraversableAccessor;
 use eve\access\TraversableMutator;
-use eve\factory\IFactory;
+use eve\factory\ICoreFactory;
 use eve\inject\IInjectable;
 use eve\inject\IInjectableIdentity;
 use eve\inject\Injector;
@@ -21,9 +21,9 @@ final class IdentityInjectorTest
 extends TestCase
 {
 
-	private function _mockFactory() : IFactory {
+	private function _mockFactory() : ICoreFactory {
 		$ins = $this
-			->getMockBuilder(IFactory::class)
+			->getMockBuilder(ICoreFactory::class)
 			->getMock();
 
 		$ins

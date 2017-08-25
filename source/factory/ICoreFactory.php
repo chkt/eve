@@ -2,9 +2,11 @@
 
 namespace eve\factory;
 
+use eve\common\IFactory;
 
 
-interface IFactory
+
+interface ICoreFactory
 {
 
 	public function hasInterface(string $qname, string $iname) : bool;

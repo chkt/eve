@@ -2,10 +2,10 @@
 
 namespace test\access;
 
-use eve\common\ISimpleFactory;
 use PHPUnit\Framework\TestCase;
 
-use eve\factory\IFactory;
+use eve\common\ISimpleFactory;
+use eve\factory\ICoreFactory;
 use eve\access\TraversableMutator;
 use eve\access\TraversableMutatorFactory;
 
@@ -17,7 +17,7 @@ extends TestCase
 
 	private function _mockFactory() {
 		$ins = $this
-			->getMockBuilder(IFactory::class)
+			->getMockBuilder(ICoreFactory::class)
 			->getMock();
 
 		$ins
@@ -31,7 +31,7 @@ extends TestCase
 		return $ins;
 	}
 
-	private function _produceMutatorFactory(IFactory $factory = null) {
+	private function _produceMutatorFactory(ICoreFactory $factory = null) {
 		if (is_null($factory)) $factory = $this->_mockFactory();
 
 		return new TraversableMutatorFactory($factory);

@@ -6,7 +6,7 @@ use eve\access\TraversableAccessor;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\ISimpleFactory;
-use eve\factory\IFactory;
+use eve\factory\ICoreFactory;
 use eve\access\ITraversableAccessor;
 use eve\entity\IEntityParser;
 use eve\entity\EntityParser;
@@ -86,9 +86,9 @@ extends TestCase
 	}
 
 
-	private function _mockFactory(array $map = []) : IFactory {
+	private function _mockFactory(array $map = []) : ICoreFactory {
 		$ins = $this
-			->getMockBuilder(IFactory::class)
+			->getMockBuilder(ICoreFactory::class)
 			->getMock();
 
 		$ins
@@ -136,7 +136,7 @@ extends TestCase
 		return $ins;
 	}
 
-	private function _mockDriver(IFactory $factory = null, IEntityParser $parser = null, ISimpleFactory $accessor = null) : IInjectorDriver {
+	private function _mockDriver(ICoreFactory $factory = null, IEntityParser $parser = null, ISimpleFactory $accessor = null) : IInjectorDriver {
 		if(is_null($factory)) $factory = $this->_mockFactory();
 		if (is_null($parser)) $parser = $this->_produceParser();
 		if (is_null($accessor)) $accessor = $this->_mockAccessorFactory();

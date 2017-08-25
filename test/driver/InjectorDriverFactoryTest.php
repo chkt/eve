@@ -2,13 +2,13 @@
 
 namespace test\driver;
 
-use eve\access\TraversableAccessor;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\ISimpleFactory;
-use eve\factory\IFactory;
+use eve\factory\ICoreFactory;
 use eve\access\ITraversableAccessor;
 use eve\access\IItemMutator;
+use eve\access\TraversableAccessor;
 use eve\entity\IEntityParser;
 use eve\inject\IInjector;
 use eve\provide\ILocator;
@@ -28,9 +28,9 @@ extends TestCase
 			->getMock();
 	}
 
-	private function _mockFactory() : IFactory {
+	private function _mockFactory() : ICoreFactory {
 		$ins = $this
-			->getMockBuilder(IFactory::class)
+			->getMockBuilder(ICoreFactory::class)
 			->getMock();
 
 		$ins
@@ -125,7 +125,7 @@ extends TestCase
 			->instance();
 
 		$this->assertInstanceOf(IInjectorDriver::class, $driver);
-		$this->assertInstanceOf(IFactory::class, $driver->getFactory());
+		$this->assertInstanceOf(ICoreFactory::class, $driver->getFactory());
 		$this->assertInstanceOf(ISimpleFactory::class, $driver->getAccessorFactory());
 		$this->assertInstanceOf(IEntityParser::class, $driver->getEntityParser());
 		$this->assertInstanceOf(ITraversableAccessor::class, $driver->getReferences());

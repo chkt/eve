@@ -5,7 +5,7 @@ namespace eve\driver;
 use eve\access\TraversableAccessor;
 
 use eve\common\ISimpleFactory;
-use eve\factory\IFactory;
+use eve\factory\ICoreFactory;
 use eve\access\IItemAccessor;
 use eve\access\IItemMutator;
 use eve\entity\IEntityParser;
@@ -37,7 +37,7 @@ implements IInjectorDriver
 	}
 
 
-	public function getFactory() : IFactory {
+	public function getFactory() : ICoreFactory {
 		return $this->getItem('factory');
 	}
 

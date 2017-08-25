@@ -4,16 +4,24 @@ namespace test\factory;
 
 use PHPUnit\Framework\TestCase;
 
-use eve\factory\Factory;
+use eve\factory\ICoreFactory;
+use eve\factory\CoreFactory;
 
 
 
-final class FactoryTest
+final class CoreFactoryTest
 extends TestCase
 {
 
 	private function _produceFactory() {
-		return new Factory();
+		return new CoreFactory();
+	}
+
+
+	public function testInheritance() {
+		$fab = $this->_produceFactory();
+
+		$this->assertInstanceOf(ICoreFactory::class, $fab);
 	}
 
 

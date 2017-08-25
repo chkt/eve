@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 use eve\common\ISimpleFactory;
 use eve\common\IDriver;
-use eve\factory\IFactory;
+use eve\factory\ICoreFactory;
 use eve\access\IItemAccessor;
 use eve\access\TraversableAccessor;
 use eve\access\IItemMutator;
@@ -83,7 +83,7 @@ extends TestCase
 	}
 
 	public function testGetFactory() {
-		$fab = $this->getMockBuilder(IFactory::class)->getMock();
+		$fab = $this->getMockBuilder(ICoreFactory::class)->getMock();
 		$deps = [ 'factory' => $fab ];
 
 		$driver = $this->_produceDriver($deps);

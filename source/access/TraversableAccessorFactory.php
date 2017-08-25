@@ -3,7 +3,7 @@
 namespace eve\access;
 
 use eve\common\ISimpleFactory;
-use eve\factory\IFactory;
+use eve\factory\ICoreFactory;
 
 
 
@@ -14,7 +14,7 @@ implements ISimpleFactory
 	private $_fab;
 
 
-	public function __construct(IFactory $fab) {
+	public function __construct(ICoreFactory $fab) {
 		$this->_fab = $fab;
 	}
 

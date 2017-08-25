@@ -29,7 +29,7 @@ implements ISimpleFactory
 
 	public function instance(array& $config = []) {
 		$spec = array_merge_deep([
-			'factoryName' => \eve\factory\Factory::class,
+			'factoryName' => \eve\factory\CoreFactory::class,
 			'accessorFactoryName' => \eve\access\TraversableAccessorFactory::class,
 			'entityParserName' => \eve\entity\EntityParser::class,
 			'injectorName' => \eve\inject\IdentityInjector::class,
