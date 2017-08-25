@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use eve\common\ISimpleFactory;
 use eve\factory\IFactory;
 use eve\access\ITraversableAccessor;
+use eve\access\IItemMutator;
 use eve\entity\IEntityParser;
 use eve\inject\IInjector;
 use eve\provide\ILocator;
@@ -137,6 +138,7 @@ extends TestCase
 		$factory = $this->_mockFactory();
 		$accessor = $this->_mockAccessorFactory();
 		$parser = $this->_mockInterface(IEntityParser::class);
+		$cache = $this->_mockInterface(IItemMutator::class);
 		$injector = $this->_mockInterface(IInjector::class);
 		$locator = $this->_mockInterface(ILocator::class);
 
@@ -144,6 +146,7 @@ extends TestCase
 			'factory' => $factory,
 			'accessorFactory' => $accessor,
 			'entityParser' => $parser,
+			'instanceCache' => $cache,
 			'injector' => $injector,
 			'locator' => $locator
 		];
