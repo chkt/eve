@@ -19,7 +19,7 @@ implements ISimpleFactory
 	}
 
 
-	public function instance(array& $data) {
+	public function produce(array& $data) {
 		return $this->_fab->newInstance(TraversableAccessor::class, [ & $data ]);
 	}
 }

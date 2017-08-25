@@ -56,7 +56,7 @@ extends TestCase
 
 		$ins
 			->expects($this->any())
-			->method('instance')
+			->method('produce')
 			->with($this->isType('array'))
 			->willReturnCallback(function(array& $data) {
 				return new TraversableAccessor($data);
@@ -121,10 +121,10 @@ extends TestCase
 		$this->assertInstanceOf(IFactory::class, $fab);
 	}
 
-	public function testInstance() {
+	public function testProduce() {
 		$driver = $this
 			->_produceFactory()
-			->instance();
+			->produce();
 
 		$this->assertInstanceOf(IInjectorDriver::class, $driver);
 		$this->assertInstanceOf(ICoreFactory::class, $driver->getFactory());
@@ -136,7 +136,7 @@ extends TestCase
 		$this->assertInstanceOf(IInjectorHost::class, $driver->getHost());
 	}
 
-	public function testInstance_instances() {
+	public function testProduce_instances() {
 		$factory = $this->_mockFactory();
 		$accessor = $this->_mockAccessorFactory();
 		$parser = $this->_mockInterface(IEntityParser::class);
@@ -155,7 +155,7 @@ extends TestCase
 
 		$driver = $this
 			->_produceFactory()
-			->instance($config);
+			->produce($config);
 
 		$this->assertSame($factory, $driver->getFactory());
 		$this->assertSame($accessor, $driver->getAccessorFactory());

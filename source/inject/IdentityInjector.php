@@ -32,7 +32,7 @@ extends Injector
 
 		if (!$fab->hasInterface($qname, IInjectableIdentity::class)) return parent::produce($qname, $config);
 
-		$access = $this->_access->instance($config);
+		$access = $this->_access->produce($config);
 		$cache = $this->_cache;
 
 		$id = implode(':', [

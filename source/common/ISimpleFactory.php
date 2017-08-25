@@ -8,5 +8,5 @@ interface ISimpleFactory
 extends IFactory
 {
 
-	public function instance(array& $config);
+	public function produce(array& $config);
 }

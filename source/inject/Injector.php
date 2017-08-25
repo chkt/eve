@@ -58,7 +58,7 @@ implements IInjector
 
 			$res[] = $this
 				->_getResolver($type)
-				->produce($this->_access->instance($dep));
+				->produce($this->_access->produce($dep));
 		}
 
 		return $res;
@@ -80,6 +80,6 @@ implements IInjector
 
 		if (!$this->_fab->hasInterface($qname, IInjectable::class)) throw new \ErrorException(sprintf('INJ not injectable "%s"', $qname));
 
-		return $this->_produceInstance($qname, $this->_access->instance($config));
+		return $this->_produceInstance($qname, $this->_access->produce($config));
 	}
 }

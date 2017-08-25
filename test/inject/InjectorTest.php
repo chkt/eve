@@ -127,7 +127,7 @@ extends TestCase
 
 		$ins
 			->expects($this->any())
-			->method('instance')
+			->method('produce')
 			->with($this->isType('array'))
 			->willReturnCallback(function(array& $data) {
 				return new TraversableAccessor($data);

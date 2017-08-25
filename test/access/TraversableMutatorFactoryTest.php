@@ -46,13 +46,13 @@ extends TestCase
 		$this->assertInstanceOf(IFactory::class, $fab);
 	}
 
-	public function testInstance() {
+	public function testProduce() {
 		$data = [
 			'foo' => 1,
 			'bar' => 2
 		];
 		$fab = $this->_produceMutatorFactory();
-		$ins = $fab->instance($data);
+		$ins = $fab->produce($data);
 
 		$this->assertInstanceOf(TraversableMutator::class, $ins);
 		$this->assertEquals(1, $ins->getItem('foo'));

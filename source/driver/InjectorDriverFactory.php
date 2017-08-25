@@ -27,7 +27,7 @@ final class InjectorDriverFactory
 implements ISimpleFactory
 {
 
-	public function instance(array& $config = []) {
+	public function produce(array& $config = []) {
 		$spec = array_merge_deep([
 			'factoryName' => \eve\factory\CoreFactory::class,
 			'accessorFactoryName' => \eve\access\TraversableAccessorFactory::class,
@@ -54,7 +54,7 @@ implements ISimpleFactory
 			$spec['accessorFactory'] :
 			$fab->newInstance($spec['accessorFactoryName'], [ $fab ]);
 
-		$data = $access->instance($spec);
+		$data = $access->produce($spec);
 
 		$deps = [
 			'factory' => $fab,
@@ -64,7 +64,7 @@ implements ISimpleFactory
 		$driver = $fab->newInstance(InjectorDriver::class, [ & $deps ]);
 
 		$refs = $data->getItem('references');
-		$deps['references'] = $access->instance($refs);
+		$deps['references'] = $access->produce($refs);
 
 		$deps['instanceCache'] =  $data->hasKey('instanceCache') ?
 			$data->getItem('instanceCache') :
