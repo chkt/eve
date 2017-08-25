@@ -7,6 +7,7 @@ use eve\common\IFactory;
 
 
 interface ICoreFactory
+extends IFactory
 {
 
 	public function hasInterface(string $qname, string $iname) : bool;
