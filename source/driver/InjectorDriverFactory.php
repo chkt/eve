@@ -42,7 +42,8 @@ implements ISimpleFactory
 				IInjector::TYPE_FACTORY => \eve\inject\resolve\FactoryResolver::class
 			],
 			'providers' => [],
-			'references' => []
+			'references' => [],
+			'instanceCacheName' => \eve\access\TraversableMutator::class
 		], $config);
 
 		$fab = array_key_exists('factory', $spec) ?
@@ -64,6 +65,10 @@ implements ISimpleFactory
 
 		$refs = $data->getItem('references');
 		$deps['references'] = $access->instance($refs);
+
+		$deps['instanceCache'] =  $data->hasKey('instanceCache') ?
+			$data->getItem('instanceCache') :
+			$fab->newInstance($data->getItem('instanceCacheName'), [ [] ]);
 
 		$deps['entityParser'] = $data->hasKey('entityParser') ?
 			$data->getItem('entityParser') :
