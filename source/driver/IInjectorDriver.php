@@ -6,6 +6,7 @@ use eve\common\ISimpleFactory;
 use eve\common\IDriver;
 use eve\factory\IFactory;
 use eve\access\IItemAccessor;
+use eve\access\IItemMutator;
 use eve\entity\IEntityParser;
 
 
@@ -25,4 +26,6 @@ extends IDriver, IInjectorHost
 	public function getEntityParser() : IEntityParser;
 
 	public function getReferences() : IItemAccessor;
+
+	public function getInstanceCache() : IItemMutator;
 }

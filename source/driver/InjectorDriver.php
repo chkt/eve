@@ -7,6 +7,7 @@ use eve\access\TraversableAccessor;
 use eve\common\ISimpleFactory;
 use eve\factory\IFactory;
 use eve\access\IItemAccessor;
+use eve\access\IItemMutator;
 use eve\entity\IEntityParser;
 use eve\inject\IInjector;
 use eve\provide\ILocator;
@@ -47,5 +48,9 @@ implements IInjectorDriver
 
 	public function getReferences() : IItemAccessor {
 		return $this->getItem('references');
+	}
+
+	public function getInstanceCache() : IItemMutator {
+		return $this->getItem('instanceCache');
 	}
 }
