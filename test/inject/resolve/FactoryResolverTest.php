@@ -4,6 +4,7 @@ namespace test\inject\resolve;
 
 use PHPUnit\Framework\TestCase;
 
+use eve\common\IFactory;
 use eve\common\IAccessorFactory;
 use eve\access\IItemAccessor;
 use eve\access\TraversableAccessor;
@@ -83,6 +84,7 @@ extends TestCase
 		$this->assertInstanceOf(IInjectorResolver::class, $resolver);
 		$this->assertInstanceOf(IInjectable::class, $resolver);
 		$this->assertInstanceOf(IAccessorFactory::class, $resolver);
+		$this->assertInstanceOf(IFactory::class, $resolver);
 	}
 
 

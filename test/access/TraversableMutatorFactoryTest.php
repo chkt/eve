@@ -4,6 +4,7 @@ namespace test\access;
 
 use PHPUnit\Framework\TestCase;
 
+use eve\common\IFactory;
 use eve\common\ISimpleFactory;
 use eve\factory\ICoreFactory;
 use eve\access\TraversableMutator;
@@ -42,6 +43,7 @@ extends TestCase
 		$fab = $this->_produceMutatorFactory();
 
 		$this->assertInstanceOf(ISimpleFactory::class, $fab);
+		$this->assertInstanceOf(IFactory::class, $fab);
 	}
 
 	public function testInstance() {

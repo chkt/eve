@@ -4,6 +4,7 @@ namespace test\driver;
 
 use PHPUnit\Framework\TestCase;
 
+use eve\common\IFactory;
 use eve\common\ISimpleFactory;
 use eve\factory\ICoreFactory;
 use eve\access\ITraversableAccessor;
@@ -117,6 +118,7 @@ extends TestCase
 		$fab = $this->_produceFactory();
 
 		$this->assertInstanceOf(ISimpleFactory::class, $fab);
+		$this->assertInstanceOf(IFactory::class, $fab);
 	}
 
 	public function testInstance() {

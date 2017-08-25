@@ -4,9 +4,9 @@ namespace test\inject\resolve;
 
 use PHPUnit\Framework\TestCase;
 
+use eve\common\IFactory;
 use eve\common\IAccessorFactory;
 use eve\access\TraversableAccessor;
-use eve\driver\IInjectorDriver;
 use eve\inject\IInjectable;
 use eve\inject\resolve\IInjectorResolver;
 use eve\inject\resolve\ArgumentResolver;
@@ -25,6 +25,7 @@ extends TestCase
 		return new ArgumentResolver();
 	}
 
+
 	public function testDependencyConfig() {
 		$this->assertEquals([], ArgumentResolver::getDependencyConfig($this->_produceAccessor([])));
 	}
@@ -35,6 +36,7 @@ extends TestCase
 		$this->assertInstanceOf(IInjectorResolver::class, $resolver);
 		$this->assertInstanceOf(IInjectable::class, $resolver);
 		$this->assertInstanceOf(IAccessorFactory::class, $resolver);
+		$this->assertInstanceOf(IFactory::class, $resolver);
 	}
 
 	public function testProduce() {

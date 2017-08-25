@@ -4,6 +4,7 @@ namespace test\factory;
 
 use PHPUnit\Framework\TestCase;
 
+use eve\common\IFactory;
 use eve\factory\ICoreFactory;
 use eve\factory\CoreFactory;
 
@@ -22,6 +23,7 @@ extends TestCase
 		$fab = $this->_produceFactory();
 
 		$this->assertInstanceOf(ICoreFactory::class, $fab);
+		$this->assertInstanceOf(IFactory::class, $fab);
 	}
 
 
