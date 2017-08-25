@@ -9,6 +9,7 @@ use eve\common\IDriver;
 use eve\factory\IFactory;
 use eve\access\IItemAccessor;
 use eve\access\TraversableAccessor;
+use eve\access\IItemMutator;
 use eve\entity\IEntityParser;
 use eve\driver\IInjectorHost;
 use eve\driver\IInjectorDriver;
@@ -97,5 +98,14 @@ extends TestCase
 		$driver = $this->_produceDriver($deps);
 
 		$this->assertSame($fab, $driver->getAccessorFactory());
+	}
+
+	public function testGetInstanceCache() {
+		$cache = $this->getMockBuilder(IItemMutator::class)->getMock();
+		$deps = [ 'instanceCache' => $cache ];
+
+		$driver = $this->_produceDriver($deps);
+
+		$this->assertSame($cache, $driver->getInstanceCache());
 	}
 }
