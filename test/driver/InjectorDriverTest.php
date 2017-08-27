@@ -5,11 +5,12 @@ namespace test\driver;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\ISimpleFactory;
+use eve\common\IHost;
 use eve\common\IDriver;
 use eve\factory\ICoreFactory;
 use eve\access\IItemAccessor;
-use eve\access\TraversableAccessor;
 use eve\access\IItemMutator;
+use eve\access\ItemAccessor;
 use eve\entity\IEntityParser;
 use eve\driver\IInjectorHost;
 use eve\driver\IInjectorDriver;
@@ -31,10 +32,11 @@ extends TestCase
 	public function testInheritance() {
 		$driver = $this->_produceDriver();
 
-		$this->assertInstanceOf(TraversableAccessor::class, $driver);
+		$this->assertInstanceOf(ItemAccessor::class, $driver);
 		$this->assertInstanceOf(IInjectorDriver::class, $driver);
 		$this->assertInstanceOf(IDriver::class, $driver);
-		$this->assertInstanceOf(IItemAccessor::class, $driver);
+		$this->assertInstanceOf(IInjectorHost::class, $driver);
+		$this->assertInstanceOf(IHost::class, $driver);
 	}
 
 	public function testGetHost() {
