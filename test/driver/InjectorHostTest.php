@@ -5,12 +5,12 @@ namespace test\driver;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\IHost;
-use eve\access\IItemAccessor;
+use eve\access\ItemAccessor;
 use eve\driver\IInjectorDriver;
 use eve\driver\IInjectorHost;
+use eve\driver\InjectorHost;
 use eve\inject\IInjector;
 use eve\provide\ILocator;
-use eve\driver\InjectorHost;
 
 
 
@@ -66,33 +66,7 @@ extends TestCase
 
 		$this->assertInstanceOf(IInjectorHost::class, $host);
 		$this->assertInstanceOf(IHost::class, $host);
-		$this->assertInstanceOf(IItemAccessor::class, $host);
-	}
-
-
-	public function testHasKey() {
-		$host = $this->_produceHost();
-
-		$this->assertTrue($host->hasKey('injector'));
-		$this->assertTrue($host->hasKey('locator'));
-		$this->assertFalse($host->hasKey('foo'));
-		$this->assertFalse($host->hasKey('driver'));
-	}
-
-	public function testGetItem() {
-		$host = $this->_produceHost();
-
-		$this->assertSame($host->getInjector(), $host->getItem('injector'));
-		$this->assertSame($host->getLocator(), $host->getItem('locator'));
-	}
-
-	public function testGetItem_noKey() {
-		$host = $this->_produceHost();
-
-		$this->expectException(\ErrorException::class);
-		$this->expectExceptionMessage('ACC invalid key "foo"');
-
-		$host->getItem('foo');
+		$this->assertInstanceOf(ItemAccessor::class, $host);
 	}
 
 
