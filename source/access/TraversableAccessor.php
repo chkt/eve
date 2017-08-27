@@ -5,41 +5,23 @@ namespace eve\access;
 
 
 class TraversableAccessor
+extends ItemAccessor
 implements ITraversableAccessor
 {
 
-	private $_data;
-
-
-	public function __construct(array& $data) {
-		$this->_data =& $data;
-	}
-
-
 	public function isEqual(ITraversableAccessor $b) : bool {
-		$data = $b instanceof TraversableAccessor ? $b->_data : $b->getProjection();
+		$data = $b instanceof ItemAccessor ? $b->_useData() : $b->getProjection();
 
-		return $this->_data === $data;
-	}
-
-
-	public function hasKey(string $key) : bool {
-		return array_key_exists($key, $this->_data);
-	}
-
-	public function getItem(string $key) {
-		if (!array_key_exists($key, $this->_data)) throw new \ErrorException(sprintf('ACC invalid key "%s"', $key));
-
-		return $this->_data[$key];
+		return $this->_useData() === $data;
 	}
 
 
 	public function& iterate() : \Generator {
-		foreach ($this->_data as $key => $value) yield $key => $value;
+		foreach ($this->_useData() as $key => $value) yield $key => $value;
 	}
 
 
 	public function getProjection(array $selector = null) : array {
-		return $this->_data;
+		return $this->_useData();
 	}
 }
