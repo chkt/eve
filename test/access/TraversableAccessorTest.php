@@ -6,8 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 use eve\common\IGenerateable;
 use eve\common\IProjectable;
-use eve\access\IKeyAccessor;
-use eve\access\IItemAccessor;
+use eve\access\ItemAccessor;
 use eve\access\TraversableAccessor;
 
 
@@ -30,51 +29,12 @@ extends TestCase
 	}
 
 
-	public function testInhertance() {
+	public function testInheritance() {
 		$ins = $this->_produceInstance();
 
-		$this->assertInstanceOf(IKeyAccessor::class, $ins);
-		$this->assertInstanceOf(IItemAccessor::class, $ins);
+		$this->assertInstanceOf(ItemAccessor::class, $ins);
 		$this->assertInstanceOf(IGenerateable::class, $ins);
 		$this->assertInstanceOf(IProjectable::class, $ins);
-	}
-
-
-	public function testHasKey() {
-		$ins = $this->_produceInstance();
-
-		$this->assertTrue($ins->hasKey('foo'));
-		$this->assertTrue($ins->hasKey('bar'));
-		$this->assertFalse($ins->hasKey('baz'));
-	}
-
-	public function testGetItem() {
-		$ins = $this->_produceInstance();
-
-		$this->assertEquals(1, $ins->getItem('foo'));
-		$this->assertEquals(2, $ins->getItem('bar'));
-	}
-
-	public function testGetItem_referencing() {
-		$data = $this->_produceSampleData();
-		$ins = $this->_produceInstance($data);
-
-		$this->assertFalse($ins->hasKey('baz'));
-
-		$data['baz'] = 3;
-
-		$this->assertTrue($ins->hasKey('baz'));
-		$this->assertEquals(3, $ins->getItem('baz'));
-	}
-
-	public function testGetItem_noKey() {
-		$ins = $this->_produceInstance();
-
-		$this->expectException(\ErrorException::class);
-		$this->expectExceptionMessage('ACC invalid key "baz"');
-		$this->expectExceptionCode(0);
-
-		$ins->getItem('baz');
 	}
 
 
