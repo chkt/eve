@@ -2,7 +2,7 @@
 
 namespace eve\driver;
 
-use eve\access\TraversableAccessor;
+use eve\access\ItemAccessor;
 
 use eve\common\ISimpleFactory;
 use eve\factory\ICoreFactory;
@@ -15,7 +15,7 @@ use eve\provide\ILocator;
 
 
 class InjectorDriver
-extends TraversableAccessor
+extends ItemAccessor
 implements IInjectorDriver
 {
 
