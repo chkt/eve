@@ -110,7 +110,7 @@ extends TestCase
 
 		$ins
 			->expects($this->exactly(2))
-			->method('getFactory')
+			->method('getCoreFactory')
 			->with()
 			->willReturn($factory);
 

@@ -18,12 +18,13 @@ extends IDriver, IInjectorHost
 	public function getHost() : IInjectorHost;
 
 
-	public function getFactory() : ICoreFactory;
+	public function getCoreFactory() : ICoreFactory;
 
 	public function getAccessorFactory() : ISimpleFactory;
 
 
 	public function getEntityParser() : IEntityParser;
+
 
 	public function getReferences() : IItemAccessor;
 

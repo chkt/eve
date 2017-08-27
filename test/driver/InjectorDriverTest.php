@@ -84,11 +84,11 @@ extends TestCase
 
 	public function testGetFactory() {
 		$fab = $this->getMockBuilder(ICoreFactory::class)->getMock();
-		$deps = [ 'factory' => $fab ];
+		$deps = [ 'coreFactory' => $fab ];
 
 		$driver = $this->_produceDriver($deps);
 
-		$this->assertSame($fab, $driver->getFactory());
+		$this->assertSame($fab, $driver->getCoreFactory());
 	}
 
 	public function testGetAccessorFactory() {

@@ -147,7 +147,7 @@ extends TestCase
 
 		$ins
 			->expects($this->once())
-			->method('getFactory')
+			->method('getCoreFactory')
 			->with()
 			->willReturn($factory);
 

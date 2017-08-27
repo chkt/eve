@@ -25,7 +25,7 @@ implements IInjector
 	public function __construct(IInjectorDriver $driver, array $resolverNames) {
 		$this->_driver = $driver;
 
-		$this->_fab = $driver->getFactory();
+		$this->_fab = $driver->getCoreFactory();
 		$this->_parser = $driver->getEntityParser();
 		$this->_access = $driver->getAccessorFactory();		//TODO: can we use a single instance?
 

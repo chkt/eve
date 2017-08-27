@@ -29,7 +29,7 @@ implements ISimpleFactory
 
 	public function produce(array& $config = []) {
 		$spec = array_merge_deep([
-			'factoryName' => \eve\factory\CoreFactory::class,
+			'coreFactoryName' => \eve\factory\CoreFactory::class,
 			'accessorFactoryName' => \eve\access\TraversableAccessorFactory::class,
 			'entityParserName' => \eve\entity\EntityParser::class,
 			'injectorName' => \eve\inject\IdentityInjector::class,
@@ -46,9 +46,9 @@ implements ISimpleFactory
 			'instanceCacheName' => \eve\access\TraversableMutator::class
 		], $config);
 
-		$fab = array_key_exists('factory', $spec) ?
-			$spec['factory'] :
-			new $spec['factoryName']();
+		$fab = array_key_exists('coreFactory', $spec) ?
+			$spec['coreFactory'] :
+			new $spec['coreFactoryName']();
 
 		$access = array_key_exists('accessorFactory', $spec) ?
 			$spec['accessorFactory'] :
@@ -57,7 +57,7 @@ implements ISimpleFactory
 		$data = $access->produce($spec);
 
 		$deps = [
-			'factory' => $fab,
+			'coreFactory' => $fab,
 			'accessorFactory' => $access
 		];
 

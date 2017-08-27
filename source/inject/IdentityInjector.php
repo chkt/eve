@@ -19,7 +19,7 @@ extends Injector
 	public function __construct(IInjectorDriver $driver, array $resolverNames) {
 		parent::__construct($driver, $resolverNames);
 
-		$this->_fab = $driver->getFactory();
+		$this->_fab = $driver->getCoreFactory();
 		$this->_access = $driver->getAccessorFactory();
 		$this->_cache = $driver->getInstanceCache();
 	}

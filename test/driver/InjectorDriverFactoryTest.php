@@ -127,7 +127,7 @@ extends TestCase
 			->produce();
 
 		$this->assertInstanceOf(IInjectorDriver::class, $driver);
-		$this->assertInstanceOf(ICoreFactory::class, $driver->getFactory());
+		$this->assertInstanceOf(ICoreFactory::class, $driver->getCoreFactory());
 		$this->assertInstanceOf(ISimpleFactory::class, $driver->getAccessorFactory());
 		$this->assertInstanceOf(IEntityParser::class, $driver->getEntityParser());
 		$this->assertInstanceOf(ITraversableAccessor::class, $driver->getReferences());
@@ -145,7 +145,7 @@ extends TestCase
 		$locator = $this->_mockInterface(ILocator::class);
 
 		$config = [
-			'factory' => $factory,
+			'coreFactory' => $factory,
 			'accessorFactory' => $accessor,
 			'entityParser' => $parser,
 			'instanceCache' => $cache,
@@ -157,7 +157,7 @@ extends TestCase
 			->_produceFactory()
 			->produce($config);
 
-		$this->assertSame($factory, $driver->getFactory());
+		$this->assertSame($factory, $driver->getCoreFactory());
 		$this->assertSame($accessor, $driver->getAccessorFactory());
 		$this->assertSame($parser, $driver->getEntityParser());
 		$this->assertSame($injector, $driver->getInjector());

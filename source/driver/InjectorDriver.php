@@ -37,8 +37,8 @@ implements IInjectorDriver
 	}
 
 
-	public function getFactory() : ICoreFactory {
-		return $this->getItem('factory');
+	public function getCoreFactory() : ICoreFactory {
+		return $this->getItem('coreFactory');
 	}
 
 	public function getAccessorFactory() : ISimpleFactory {
