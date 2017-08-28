@@ -19,10 +19,6 @@ extends ItemAccessor
 implements IInjectorDriver
 {
 
-	public function getHost() : IInjectorHost {
-		return $this->getItem(self::ITEM_HOST);
-	}
-
 	public function getInjector() : IInjector {
 		return $this->getItem(self::ITEM_INJECTOR);
 	}
