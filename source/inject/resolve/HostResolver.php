@@ -15,7 +15,7 @@ implements IInjectorResolver
 	static public function getDependencyConfig(ITraversableAccessor $config) : array {
 		return [[
 			'type' => IInjector::TYPE_ARGUMENT,
-			'data' => $config->getItem('driver')->getHost()
+			'data' => $config->getItem('driver')
 		]];
 	}
 
@@ -31,9 +31,13 @@ implements IInjectorResolver
 
 	public function produce(ITraversableAccessor $config) {
 		$type = $config->getItem('type');
+		$map = [
+			IInjectorHost::ITEM_INJECTOR,
+			IInjectorHost::ITEM_LOCATOR
+		];
 
-		if ($type === 'injector') return $this->_host->getInjector();
-		else if ($type === 'locator') return $this->_host->getLocator();
-		else throw new \ErrorException(sprintf('INJ not resolvable "%s"', $type));
+		if (!in_array($type, $map)) throw new \ErrorException(sprintf('INJ not resolvable "%s"', $type));
+
+		return $this->_host->getItem($type);
 	}
 }
