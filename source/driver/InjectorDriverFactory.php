@@ -87,8 +87,6 @@ implements ISimpleFactory
 				'providerNames' => $data->getItem('providers')
 			]);
 
-		$deps[IInjectorDriver::ITEM_HOST] = $fab->newInstance(InjectorHost::class, [ $driver ]);
-
 		return $driver;
 	}
 }
