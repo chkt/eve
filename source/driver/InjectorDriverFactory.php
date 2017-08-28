@@ -3,7 +3,6 @@
 namespace eve\driver;
 
 use eve\common\ISimpleFactory;
-
 use eve\inject\IInjector;
 
 
@@ -57,38 +56,38 @@ implements ISimpleFactory
 		$data = $access->produce($spec);
 
 		$deps = [
-			'coreFactory' => $fab,
-			'accessorFactory' => $access
+			IInjectorDriver::ITEM_CORE_FACTORY => $fab,
+			IInjectorDriver::ITEM_ACCESSOR_FACTORY => $access
 		];
 
 		$driver = $fab->newInstance(InjectorDriver::class, [ & $deps ]);
 
 		$refs = $data->getItem('references');
-		$deps['references'] = $access->produce($refs);
+		$deps[IInjectorDriver::ITEM_REFERENCES] = $access->produce($refs);
 
-		$deps['instanceCache'] =  $data->hasKey('instanceCache') ?
+		$deps[IInjectorDriver::ITEM_INSTANCE_CACHE] =  $data->hasKey('instanceCache') ?
 			$data->getItem('instanceCache') :
 			$fab->newInstance($data->getItem('instanceCacheName'), [ [] ]);
 
-		$deps['entityParser'] = $data->hasKey('entityParser') ?
+		$deps[IInjectorDriver::ITEM_ENTITY_PARSER] = $data->hasKey('entityParser') ?
 			$data->getItem('entityParser') :
 			$fab->newInstance($data->getItem('entityParserName'));
 
-		$deps['injector'] = $data->hasKey('injector') ?
+		$deps[IInjectorDriver::ITEM_INJECTOR] = $data->hasKey('injector') ?
 			$data->getItem('injector') :
 			$fab->newInstance($data->getItem('injectorName'), [
 				$driver,
 				$data->getItem('resolvers')
 			]);
 
-		$deps['locator'] = $data->hasKey('locator') ?
+		$deps[IInjectorDriver::ITEM_LOCATOR] = $data->hasKey('locator') ?
 			$data->getItem('locator') :
 			$deps['injector']->produce($data->getItem('locatorName'), [
 				'driver' => $driver,
 				'providerNames' => $data->getItem('providers')
 			]);
 
-		$deps['host'] = $fab->newInstance(InjectorHost::class, [ $driver ]);
+		$deps[IInjectorDriver::ITEM_HOST] = $fab->newInstance(InjectorHost::class, [ $driver ]);
 
 		return $driver;
 	}

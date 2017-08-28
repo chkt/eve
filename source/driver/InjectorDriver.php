@@ -20,37 +20,37 @@ implements IInjectorDriver
 {
 
 	public function getHost() : IInjectorHost {
-		return $this->getItem('host');
+		return $this->getItem(self::ITEM_HOST);
 	}
 
 	public function getInjector() : IInjector {
-		return $this->getItem('injector');
+		return $this->getItem(self::ITEM_INJECTOR);
 	}
 
 	public function getLocator() : ILocator {
-		return $this->getItem('locator');
+		return $this->getItem(self::ITEM_LOCATOR);
 	}
 
 
 	public function getEntityParser() : IEntityParser {
-		return $this->getItem('entityParser');
+		return $this->getItem(self::ITEM_ENTITY_PARSER);
 	}
 
 
 	public function getCoreFactory() : ICoreFactory {
-		return $this->getItem('coreFactory');
+		return $this->getItem(self::ITEM_CORE_FACTORY);
 	}
 
 	public function getAccessorFactory() : ISimpleFactory {
-		return $this->getItem('accessorFactory');
+		return $this->getItem(self::ITEM_ACCESSOR_FACTORY);
 	}
 
 
 	public function getReferences() : IItemAccessor {
-		return $this->getItem('references');
+		return $this->getItem(self::ITEM_REFERENCES);
 	}
 
 	public function getInstanceCache() : IItemMutator {
-		return $this->getItem('instanceCache');
+		return $this->getItem(self::ITEM_INSTANCE_CACHE);
 	}
 }

@@ -15,8 +15,8 @@ implements IInjectorHost
 
 	public function __construct(IInjectorDriver $driver) {
 		$data = [
-			'injector' => $driver->getInjector(),
-			'locator' => $driver->getLocator()
+			self::ITEM_INJECTOR => $driver->getInjector(),
+			self::ITEM_LOCATOR => $driver->getLocator()
 		];
 
 		parent::__construct($data);
@@ -24,10 +24,10 @@ implements IInjectorHost
 
 
 	public function getInjector() : IInjector {
-		return $this->getItem('injector');
+		return $this->getItem(self::ITEM_INJECTOR);
 	}
 
 	public function getLocator() : ILocator {
-		return $this->getItem('locator');
+		return $this->getItem(self::ITEM_LOCATOR);
 	}
 }

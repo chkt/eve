@@ -15,6 +15,15 @@ interface IInjectorDriver
 extends IDriver, IInjectorHost
 {
 
+	const ITEM_HOST = 'host';
+	const ITEM_CORE_FACTORY = 'coreFactory';
+	const ITEM_ACCESSOR_FACTORY = 'accessorFactory';
+	const ITEM_ENTITY_PARSER = 'entityParser';
+	const ITEM_REFERENCES = 'references';
+	const ITEM_INSTANCE_CACHE = 'instanceCache';
+
+
+
 	public function getHost() : IInjectorHost;
 
 
