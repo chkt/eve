@@ -39,14 +39,6 @@ extends TestCase
 		$this->assertInstanceOf(IHost::class, $driver);
 	}
 
-	public function testGetHost() {
-		$host = $this->getMockBuilder(IInjectorHost::class)->getMock();
-		$deps = [ 'host' => $host];
-
-		$driver = $this->_produceDriver($deps);
-
-		$this->assertSame($host, $driver->getHost());
-	}
 
 	public function testGetInjector() {
 		$injector = $this->getMockBuilder(IInjector::class)->getMock();
