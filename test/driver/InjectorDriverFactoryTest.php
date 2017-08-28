@@ -13,7 +13,6 @@ use eve\access\TraversableAccessor;
 use eve\entity\IEntityParser;
 use eve\inject\IInjector;
 use eve\provide\ILocator;
-use eve\driver\IInjectorHost;
 use eve\driver\IInjectorDriver;
 use eve\driver\InjectorDriverFactory;
 
@@ -35,12 +34,9 @@ extends TestCase
 			->getMock();
 
 		$ins
-			->expects($this->exactly(2))
+			->expects($this->once())
 			->method('newInstance')
-			->with($this->logicalOr(
-				$this->equalTo(\eve\driver\InjectorDriver::class),
-				$this->equalTo(\eve\driver\InjectorHost::class)
-			))
+			->with($this->equalTo(\eve\driver\InjectorDriver::class))
 			->willReturnCallback(function(string $qname, array $args) {
 				return new $qname(...$args);
 			});
@@ -133,7 +129,6 @@ extends TestCase
 		$this->assertInstanceOf(ITraversableAccessor::class, $driver->getReferences());
 		$this->assertInstanceOf(IInjector::class, $driver->getInjector());
 		$this->assertInstanceOf(ILocator::class, $driver->getLocator());
-		$this->assertInstanceOf(IInjectorHost::class, $driver->getHost());
 	}
 
 	public function testProduce_instances() {
