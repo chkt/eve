@@ -1,6 +1,6 @@
 {
 	"name" : "chkt/eve",
-	"description" : "Factory, Dependency Injection, Dependency Container, Locator",
+	"description" : "A minimalistic and flexible and powerful dependency injection system",
 	"license" : "MIT",
 
 	"keywords" : [
@@ -8,7 +8,8 @@
 		"Dependency Injection",
 		"DI",
 		"Dependency Container",
-		"Locator"
+		"Locator",
+		"Provider"
 	],
 
 	"authors" : [{
