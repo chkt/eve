@@ -1,5 +1,5 @@
-#eve
-##A minimalistic, flexible and powerful dependency injector
+# eve
+## A minimalistic, flexible and powerful dependency injector
 
 eve is a small (~200 lines of executable code), self contained **dependency injector**
 choosing a **configuration approach** over reflection or meta-programming.
@@ -7,16 +7,16 @@ choosing a **configuration approach** over reflection or meta-programming.
 Dependencies are defined in code alongside their classes offering 
 a high level of control over object creation, sharing and caching.
 
-###Install
+### Install
 
 You can use *composer* to install eve.
 
-####Command line
+#### Command line
 ```bash
 $ php composer.phar install chkt/eve
 ```
 
-####composer.son
+#### composer.son
 ```json
 {
   "require" : {
@@ -31,7 +31,7 @@ Alternatively you can the *github repository* to a place of your liking.
 $ git clone https://github.com/chkt/eve.git
 ```
 
-###Basic usage
+### Basic usage
 
 The injector depends on a couple of helpers to resolve and inject dependencies.
 All of these are combined into the **InjectorDriver**.
@@ -62,7 +62,7 @@ Since eve is not using reflection or other meta-programming techniques,
 it depends on injectable objects implementing `\eve\inject\IInjectable`,
 which defines the single static method `getDependencyConfig`.
 
-####ClassName.php
+#### ClassName.php
 ```php
 
 namespace namespace;

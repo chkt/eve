@@ -1,5 +1,5 @@
-#InjectorDriver
-##Creation
+# InjectorDriver
+## Creation
 
 Creating a basic driver is easy:
 
@@ -33,7 +33,7 @@ $driver = $factory->produce([
 ]);
 ```
 
-###Options
+### Options
 
 * `'coreFactoryName'`:
 the qualified name of a class implementing `\eve\factory\ICoreFactory` -
