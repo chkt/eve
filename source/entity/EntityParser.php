@@ -17,8 +17,8 @@ implements IEntityParser
 		) throw new \ErrorException(sprintf('ENT malformed entity "%s"', $entity));
 
 		return array_combine([
-			'type',
-			'location'
+			self::COMPONENT_TYPE,
+			self::COMPONENT_LOCATION
 		], $segs);
 	}
 }
