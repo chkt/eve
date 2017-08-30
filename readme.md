@@ -25,7 +25,7 @@ $ php composer.phar install chkt/eve
 }
 ```
 
-Alternatively you can the *github repository* to a place of your liking.
+Alternatively you can clone the *github repository* to a place of your liking.
 
 ```bash
 $ git clone https://github.com/chkt/eve.git
@@ -99,9 +99,9 @@ The `getDependencyConfig` method of the class defines what kind of arguments new
 of the class are to be created with.
 
 In the example above the injector will inject itself as the first argument of the object
-constructor and the object referenced by `'ExternalObject'` as the second argument.
+constructor and the object referenced by `'externalObject'` as the second argument.
 If the injector was supplied with an array containing a property named `'options'`,
-it will be supplied are the third argument, otherwise an empty array will be used.
+it will be supplied as the third argument, otherwise an empty array will be used.
 
 There are a few different ways to configure dependencies built into the injector and it is easy
 to configure additional ways of resolving dependencies by configuring the driver.
