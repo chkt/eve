@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 use eve\common\IFactory;
 use eve\common\IAccessorFactory;
+use eve\access\IAccessorException;
 use eve\access\ITraversableAccessor;
 use eve\access\TraversableAccessor;
 use eve\driver\IInjectorDriver;
@@ -81,7 +82,7 @@ extends TestCase
 		$resolver = $this->_produceResolver();
 		$accessor = $this->_produceAccessor([]);
 
-		$this->expectException(\ErrorException::class);
+		$this->expectException(IAccessorException::class);
 		$this->expectExceptionMessage('ACC invalid key "name"');
 
 		$resolver->produce($accessor);
@@ -91,7 +92,7 @@ extends TestCase
 		$resolver = $this->_produceResolver();
 		$accessor = $this->_produceAccessor([ 'name' => 'foo' ]);
 
-		$this->expectException(\ErrorException::class);
+		$this->expectException(IAccessorException::class);
 		$this->expectExceptionMessage('ACC invalid key "foo"');
 
 		$resolver->produce($accessor);

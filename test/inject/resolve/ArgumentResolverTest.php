@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 use eve\common\IFactory;
 use eve\common\IAccessorFactory;
 use eve\access\TraversableAccessor;
+use eve\access\IAccessorException;
 use eve\inject\IInjectable;
 use eve\inject\resolve\IInjectorResolver;
 use eve\inject\resolve\ArgumentResolver;
@@ -50,7 +51,7 @@ extends TestCase
 		$resolver = $this->_produceResolver();
 		$accessor = $this->_produceAccessor([]);
 
-		$this->expectException(\ErrorException::class);
+		$this->expectException(IAccessorException::class);
 		$this->expectExceptionMessage('ACC invalid key "data"');
 
 		$resolver->produce($accessor);

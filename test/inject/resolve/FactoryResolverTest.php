@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 use eve\common\IFactory;
 use eve\common\IAccessorFactory;
+use eve\access\IAccessorException;
 use eve\access\IItemAccessor;
 use eve\access\TraversableAccessor;
 use eve\driver\IInjectorDriver;
@@ -118,7 +119,7 @@ extends TestCase
 		$resolver = $this->_produceResolver($injector);
 		$accessor = $this->_produceAccessor([]);
 
-		$this->expectException(\ErrorException::class);
+		$this->expectException(IAccessorException::class);
 		$this->expectExceptionMessage('ACC invalid key "factory"');
 
 		$resolver->produce($accessor);
