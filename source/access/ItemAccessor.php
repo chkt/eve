@@ -16,7 +16,12 @@ implements IItemAccessor
 	}
 
 
-	protected function& _useData() : array {
+	protected function _handleAccessorException(AccessorException $ex) : bool {
+		return false;
+	}
+
+
+	final protected function& _useData() : array {
 		return $this->_data;
 	}
 
@@ -27,7 +32,14 @@ implements IItemAccessor
 
 
 	public function getItem(string $key) {
-		if (!array_key_exists($key, $this->_data)) throw new \ErrorException(sprintf('ACC invalid key "%s"', $key));
+		if (!array_key_exists($key, $this->_data)) {
+			$ex = new AccessorException($key);
+
+			if (
+				!$this->_handleAccessorException($ex) ||
+				!array_key_exists($key, $this->_data)
+			) throw $ex;
+		}
 
 		return $this->_data[$key];
 	}
