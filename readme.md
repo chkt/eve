@@ -2,7 +2,8 @@
 ## A minimalistic, flexible and powerful dependency injector
 
 eve is a small (~200 lines of executable code), self contained **dependency injector**
-choosing a **configuration approach** over reflection or meta-programming.
+choosing a **configuration approach** over reflection, annotations or similar
+meta-programming techniques.
 
 Dependencies are defined in code alongside their classes offering 
 a high level of control over object creation, sharing and caching.
@@ -62,10 +63,10 @@ Since eve is not using reflection or other meta-programming techniques,
 it depends on injectable objects implementing `\eve\inject\IInjectable`,
 which defines the single static method `getDependencyConfig`.
 
-#### ClassName.php
+#### ExampleClass.php
 ```php
 
-namespace namespace;
+namespace exampleNamespace;
 
 use eve\access\ITraverableAccessor;
 use eve\inject\IInjectable;
@@ -73,7 +74,7 @@ use eve\inject\IInjector;
 
 
 
-class ClassName
+class ExampleClass
 implements IInjectable
 {
 
@@ -95,13 +96,24 @@ implements IInjectable
 
 ```
 
-The `getDependencyConfig` method of the class defines what kind of arguments new instances
+The `getDependencyConfig` method defines what kind of arguments new instances
 of the class are to be created with.
 
 In the example above the injector will inject itself as the first argument of the object
 constructor and the object referenced by `'externalObject'` as the second argument.
 If the injector was supplied with an array containing a property named `'options'`,
-it will be supplied as the third argument, otherwise an empty array will be used.
+as its second argument, it will be supplied as the third argument to the constructor:
+
+```php
+$injector->produce(\exampleNamespace\ExampleClass::class, [ 'options' => [...] ]);
+```
+
+If no second argument was supplied to the injector or it did not contain an `'options'` property,
+`getDependencyConfig` will return an empty array as the third constructor argument.
+
+```php
+$injector->produce(\exampleNamespace\ExampleClass::class);
+```
 
 There are a few different ways to configure dependencies built into the injector and it is easy
 to configure additional ways of resolving dependencies by configuring the driver.
