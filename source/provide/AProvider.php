@@ -3,6 +3,8 @@
 namespace eve\provide;
 
 use eve\access\ITraversableAccessor;
+use eve\factory\ICoreFactory;
+use eve\inject\IInjectable;
 use eve\inject\IInjector;
 
 
@@ -17,40 +19,56 @@ implements IProvider
 			'data' => $config
 				->getItem('driver')
 				->getInjector()
+		], [
+			'type' => IInjector::TYPE_ARGUMENT,
+			'data' => $config
+				->getItem('driver')
+				->getCoreFactory()
 		]];
 	}
 
 
 
 	private $_injector;
+	private $_coreFactory;
 
 
-	public function __construct(IInjector $injector) {
+	public function __construct(IInjector $injector, ICoreFactory $coreFactory) {
 		$this->_injector = $injector;
+		$this->_coreFactory = $coreFactory;
 	}
 
 
 	abstract protected function _parseEntity(string $entity) : array;
 
 
-	public function hasKey(string $key) : bool {
-		try {
-			$this->getItem($key);
-
-			return true;
-		}
-		catch (\ReflectionException $ex) {
-			return false;
-		}
-	}
-
-	public function getItem(string $key) {
-		$parts = $this->_parseEntity($key);
+	protected function _getParts(string $entity) : array {
+		$parts = $this->_parseEntity($entity);
 
 		if (
 			!array_key_exists('qname', $parts) ||
-			!array_key_exists('config', $parts)
-		) throw new \ErrorException(sprintf('PRV malformed entity "%s"', $key));
+			!is_string($parts['qname']) ||
+			!array_key_exists('config', $parts) ||
+			!is_array($parts['config'])
+		) throw new \ErrorException(sprintf('PRV malformed entity "%s"', $entity));
+
+		return $parts;
+	}
+
+
+	public function hasKey(string $key) : bool {
+		try {
+			$parts = $this->_getParts($key);
+		}
+		catch (\Exception $ex) {
+			return false;
+		}
+
+		return $this->_coreFactory->hasInterface($parts['qname'], IInjectable::class);
+	}
+
+	public function getItem(string $key) {
+		$parts = $this->_getParts($key);
 
 		return $this->_injector->produce($parts['qname'], $parts['config']);
 	}
