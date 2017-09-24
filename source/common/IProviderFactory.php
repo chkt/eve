@@ -2,7 +2,7 @@
 
 namespace eve\common;
 
-use eve\access\IItemAccessor;
+use eve\access\ITraversableAccessor;
 
 
 
@@ -10,7 +10,7 @@ interface IProviderFactory
 extends IAccessorFactory
 {
 
-	public function setConfig(IItemAccessor $config) : IProviderFactory;
+	public function setConfig(ITraversableAccessor $config) : IProviderFactory;
 
 	public function getInstance();
 }
