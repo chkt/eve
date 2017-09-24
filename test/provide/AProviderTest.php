@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 use eve\access\IItemAccessor;
 use eve\access\TraversableAccessor;
+use eve\factory\ICoreFactory;
 use eve\driver\IInjectorDriver;
 use eve\inject\IInjectable;
 use eve\inject\IInjector;
@@ -19,13 +20,6 @@ extends TestCase
 {
 
 	private function _mockInjector(callable $fn = null) : IInjector {
-		if (is_null($fn)) $fn = function(string $qname, array $config) {
-			return [
-				'qname' => $qname,
-				'config' => $config
-			];
-		};
-
 		$ins = $this
 			->getMockBuilder(IInjector::class)
 			->getMock();
@@ -37,14 +31,35 @@ extends TestCase
 				$this->isType('string'),
 				$this->isType('array')
 			)
+			->willReturnCallback(function(string $qname, array $config) {
+				return [
+					'qname' => $qname,
+					'config' => $config
+				];
+			});
+
+		return $ins;
+	}
+
+	private function _mockFactory(callable $fn = null) : ICoreFactory {
+		if (is_null($fn)) $fn = function(string $qname, string $iname) {
+			return $qname === 'foo' && $iname === IInjectable::class;
+		};
+
+		$ins = $this
+			->getMockBuilder(ICoreFactory::class)
+			->getMock();
+
+		$ins
+			->expects($this->any())
+			->method('hasInterface')
+			->with($this->isType('string'), $this->isType('string'))
 			->willReturnCallback($fn);
 
 		return $ins;
 	}
 
-	private function _mockDriver(IInjector $injector = null) : IInjectorDriver {
-		if (is_null($injector)) $injector = $this->_mockInjector();
-
+	private function _mockDriver(IInjector $injector, ICoreFactory $factory) : IInjectorDriver {
 		$ins = $this
 			->getMockBuilder(IInjectorDriver::class)
 			->getMock();
@@ -55,11 +70,19 @@ extends TestCase
 			->with()
 			->willReturn($injector);
 
+		$ins
+			->expects($this->once())
+			->method('getCoreFactory')
+			->with()
+			->willReturn($factory);
+
 		return $ins;
 	}
 
-	private function _mockProvider(IInjector $injector = null, callable $fn = null) : AProvider {
-		if (is_null($injector)) $injector = $this->_mockInjector();
+	private function _mockProvider(ICoreFactory $factory = null, callable $fn = null) : AProvider {
+		$injector = $this->_mockInjector();
+
+		if (is_null($factory)) $factory = $this->_mockFactory();
 
 		if (is_null($fn)) $fn = function(string $entity) {
 			$parts = explode('?', $entity, 2);
@@ -75,7 +98,7 @@ extends TestCase
 
 		$ins = $this
 			->getMockBuilder(AProvider::class)
-			->setConstructorArgs([ $injector ])
+			->setConstructorArgs([ $injector, $factory ])
 			->getMockForAbstractClass();
 
 		$ins
@@ -94,11 +117,15 @@ extends TestCase
 
 	public function testDependencyConfig() {
 		$injector = $this->_mockInjector();
-		$driver = $this->_mockDriver($injector);
+		$factory = $this->_mockFactory();
+		$driver = $this->_mockDriver($injector, $factory);
 
 		$this->assertEquals([[
 			'type' => IInjector::TYPE_ARGUMENT,
 			'data' => $injector
+		], [
+			'type' => IInjector::TYPE_ARGUMENT,
+			'data' => $factory
 		]], AProvider::getDependencyConfig($this->_produceAccessor([
 			'driver' => $driver
 		])));
@@ -126,9 +153,11 @@ extends TestCase
 		], $ref);
 	}
 
-	public function testGetItem_malformed() {
+	public function testGetItem_noName() {
 		$provider = $this->_mockProvider(null, function(string $entity) {
-			return [];
+			return [
+				'config' => []
+			];
 		});
 
 		$this->expectException(\ErrorException::class);
@@ -137,14 +166,61 @@ extends TestCase
 		$ref = $provider->getItem('foo?a=b&c=d');
 	}
 
-	public function testHasKey() {
-		$injector = $this->_mockInjector(function(string $qname, array $config = []) {
-			if ($qname === 'foo') return 'foo';
-			else throw new \ReflectionException();
+	public function testGetItem_badName() {
+		$provider = $this->_mockProvider(null, function(string $entity) {
+			return [
+				'qname' => 0,
+				'config' => []
+			];
 		});
-		$provider = $this->_mockProvider($injector);
+
+		$this->expectException(\ErrorException::class);
+		$this->expectExceptionMessage('PRV malformed entity "foo?a=b&c=d"');
+
+		$ref = $provider->getItem('foo?a=b&c=d');
+	}
+
+	public function testGetItem_noConfig() {
+		$provider = $this->_mockProvider(null, function(string $entity) {
+			return [
+				'qname' => 'foo'
+			];
+		});
+
+		$this->expectException(\ErrorException::class);
+		$this->expectExceptionMessage('PRV malformed entity "foo?a=b&c=d"');
+
+
+		$ref = $provider->getItem('foo?a=b&c=d');
+	}
+
+	public function testGetItem_badConfig() {
+		$provider = $this->_mockProvider(null, function(string $entitu) {
+			return [
+				'qname' => 'foo',
+				'config' => 0
+			];
+		});
+
+		$this->expectException(\ErrorException::class);
+		$this->expectExceptionMessage('PRV malformed entity "foo?a=b&c=d"');
+
+		$ref = $provider->getItem('foo?a=b&c=d');
+	}
+
+
+	public function testHasKey() {
+		$provider = $this->_mockProvider();
 
 		$this->assertTrue($provider->hasKey('foo?bar'));
 		$this->assertFalse($provider->hasKey('bar?baz'));
+	}
+
+	public function testHasKey_malformed() {
+		$provider = $this->_mockProvider(null, function(string $entity) {
+			return [];
+		});
+
+		$this->assertFalse($provider->hasKey('foo?bar'));
 	}
 }
