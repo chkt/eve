@@ -1,9 +1,12 @@
 <?php
 
-namespace test\factory;
+namespace test\common\factory;
 
-use eve\factory\ASimpleFactory;
 use PHPUnit\Framework\TestCase;
+
+use eve\common\IFactory;
+use eve\common\factory\ISimpleFactory;
+use eve\common\factory\ASimpleFactory;
 
 
 
@@ -30,6 +33,14 @@ extends TestCase
 			->willReturnCallback($fn);
 
 		return $ins;
+	}
+
+
+	public function testInheritance() {
+		$factory = $this->_mockFactory([], function() {});
+
+		$this->assertInstanceOf(ISimpleFactory::class, $factory);
+		$this->assertInstanceOf(IFactory::class, $factory);
 	}
 
 
