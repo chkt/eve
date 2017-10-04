@@ -2,32 +2,17 @@
 
 namespace eve\driver;
 
-use eve\common\ISimpleFactory;
+use eve\factory\ASimpleFactory;
 use eve\inject\IInjector;
 
 
 
-function array_merge_deep(array $a, array $b) {
-	foreach ($b as $key => $value) {
-		if (
-			!array_key_exists($key, $a) ||
-			!is_array($a[$key]) ||
-			!is_array($value)
-		) $a[$key] = $value;
-		else $a[$key] = array_merge_deep($a[$key], $value);
-	}
-
-	return $a;
-}
-
-
-
 final class InjectorDriverFactory
-implements ISimpleFactory
+extends ASimpleFactory
 {
 
-	public function produce(array& $config = []) {
-		$spec = array_merge_deep([
+	protected function _getConfigDefaults() : array {
+		return [
 			'coreFactoryName' => \eve\factory\CoreFactory::class,
 			'accessorFactoryName' => \eve\access\TraversableAccessorFactory::class,
 			'entityParserName' => \eve\entity\EntityParser::class,
@@ -43,39 +28,42 @@ implements ISimpleFactory
 			'providers' => [],
 			'references' => [],
 			'instanceCacheName' => \eve\access\TraversableMutator::class
-		], $config);
+		];
+	}
 
-		$fab = array_key_exists('coreFactory', $spec) ?
-			$spec['coreFactory'] :
-			new $spec['coreFactoryName']();
 
-		$access = array_key_exists('accessorFactory', $spec) ?
-			$spec['accessorFactory'] :
-			$fab->newInstance($spec['accessorFactoryName'], [ $fab ]);
+	protected function _produceInstance(array $config) {
+		$core = array_key_exists('coreFactory', $config) ?
+			$config['coreFactory'] :
+			new $config['coreFactoryName']();
 
-		$data = $access->produce($spec);
+		$access = array_key_exists('accessorFactory', $config) ?
+			$config['accessorFactory'] :
+			$core->newInstance($config['accessorFactoryName'], [ $core ]);
+
+		$data = $access->produce($config);
 
 		$deps = [
-			IInjectorDriver::ITEM_CORE_FACTORY => $fab,
+			IInjectorDriver::ITEM_CORE_FACTORY => $core,
 			IInjectorDriver::ITEM_ACCESSOR_FACTORY => $access
 		];
 
-		$driver = $fab->newInstance(InjectorDriver::class, [ & $deps ]);
+		$driver = $core->newInstance(InjectorDriver::class, [ & $deps ]);
 
 		$refs = $data->getItem('references');
 		$deps[IInjectorDriver::ITEM_REFERENCES] = $access->produce($refs);
 
 		$deps[IInjectorDriver::ITEM_INSTANCE_CACHE] =  $data->hasKey('instanceCache') ?
 			$data->getItem('instanceCache') :
-			$fab->newInstance($data->getItem('instanceCacheName'), [ [] ]);
+			$core->newInstance($data->getItem('instanceCacheName'), [ [] ]);
 
 		$deps[IInjectorDriver::ITEM_ENTITY_PARSER] = $data->hasKey('entityParser') ?
 			$data->getItem('entityParser') :
-			$fab->newInstance($data->getItem('entityParserName'));
+			$core->newInstance($data->getItem('entityParserName'));
 
 		$deps[IInjectorDriver::ITEM_INJECTOR] = $data->hasKey('injector') ?
 			$data->getItem('injector') :
-			$fab->newInstance($data->getItem('injectorName'), [
+			$core->newInstance($data->getItem('injectorName'), [
 				$driver,
 				$data->getItem('resolvers')
 			]);
