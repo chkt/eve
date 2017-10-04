@@ -4,8 +4,8 @@ namespace test\driver;
 
 use PHPUnit\Framework\TestCase;
 
-use eve\common\IFactory;
 use eve\common\factory\ISimpleFactory;
+use eve\common\factory\ASimpleFactory;
 use eve\factory\ICoreFactory;
 use eve\access\ITraversableAccessor;
 use eve\access\IItemMutator;
@@ -70,8 +70,7 @@ extends TestCase
 	public function testInheritance() {
 		$fab = $this->_produceFactory();
 
-		$this->assertInstanceOf(ISimpleFactory::class, $fab);
-		$this->assertInstanceOf(IFactory::class, $fab);
+		$this->assertInstanceOf(ASimpleFactory::class, $fab);
 	}
 
 	public function testProduce() {
