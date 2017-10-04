@@ -13,7 +13,7 @@ extends ASimpleFactory
 
 	protected function _getConfigDefaults() : array {
 		return [
-			'coreFactoryName' => \eve\factory\CoreFactory::class,
+			'coreFactoryName' => \eve\common\factory\CoreFactory::class,
 			'accessorFactoryName' => \eve\access\TraversableAccessorFactory::class,
 			'entityParserName' => \eve\entity\EntityParser::class,
 			'injectorName' => \eve\inject\IdentityInjector::class,
