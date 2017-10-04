@@ -2,7 +2,7 @@
 
 namespace eve\inject;
 
-use eve\common\IProviderFactory;
+use eve\common\factory\IProviderFactory;
 
 
 
