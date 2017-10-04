@@ -5,7 +5,7 @@ namespace test\factory;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\IFactory;
-use eve\factory\ICoreFactory;
+use eve\common\factory\ICoreFactory;
 use eve\factory\CoreFactory;
 
 

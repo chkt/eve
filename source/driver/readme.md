@@ -36,7 +36,7 @@ $driver = $factory->produce([
 ### Options
 
 * `'coreFactoryName'`:
-the qualified name of a class implementing `\eve\factory\ICoreFactory` -
+the qualified name of a class implementing `\eve\common\factory\ICoreFactory` -
 The factory creating all objects
 * `'accessorFactoryName'`:
 the qualified name of a class implementing `\eve\common\factory\ISimpleFactory`

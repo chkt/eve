@@ -3,7 +3,7 @@
 namespace eve\access;
 
 use eve\common\factory\ISimpleFactory;
-use eve\factory\ICoreFactory;
+use eve\common\factory\ICoreFactory;
 
 
 

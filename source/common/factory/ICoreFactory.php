@@ -1,6 +1,6 @@
 <?php
 
-namespace eve\factory;
+namespace eve\common\factory;
 
 use eve\common\IFactory;
 

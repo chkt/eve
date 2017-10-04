@@ -6,7 +6,7 @@ use eve\access\TraversableAccessor;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\factory\ISimpleFactory;
-use eve\factory\ICoreFactory;
+use eve\common\factory\ICoreFactory;
 use eve\access\ITraversableAccessor;
 use eve\entity\IEntityParser;
 use eve\entity\EntityParser;

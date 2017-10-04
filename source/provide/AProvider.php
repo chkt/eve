@@ -2,8 +2,8 @@
 
 namespace eve\provide;
 
+use eve\common\factory\ICoreFactory;
 use eve\access\ITraversableAccessor;
-use eve\factory\ICoreFactory;
 use eve\inject\IInjectable;
 use eve\inject\IInjector;
 

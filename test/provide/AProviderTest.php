@@ -4,9 +4,9 @@ namespace test\provide;
 
 use PHPUnit\Framework\TestCase;
 
+use eve\common\factory\ICoreFactory;
 use eve\access\IItemAccessor;
 use eve\access\TraversableAccessor;
-use eve\factory\ICoreFactory;
 use eve\driver\IInjectorDriver;
 use eve\inject\IInjectable;
 use eve\inject\IInjector;

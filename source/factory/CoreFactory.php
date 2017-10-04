@@ -2,6 +2,8 @@
 
 namespace eve\factory;
 
+use eve\common\factory\ICoreFactory;
+
 
 
 final class CoreFactory
