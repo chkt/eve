@@ -2,7 +2,7 @@
 
 namespace eve\driver;
 
-use eve\factory\ASimpleFactory;
+use eve\common\factory\ASimpleFactory;
 use eve\inject\IInjector;
 
 
