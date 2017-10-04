@@ -2,7 +2,7 @@
 
 namespace eve\inject\resolve;
 
-use eve\common\IAccessorFactory;
+use eve\common\factory\IAccessorFactory;
 use eve\inject\IInjectable;
 
 

@@ -2,6 +2,7 @@
 
 namespace eve\common;
 
+use eve\common\factory\IAccessorFactory;
 use eve\access\ITraversableAccessor;
 
 

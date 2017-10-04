@@ -5,7 +5,7 @@ namespace test\inject\resolve;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\IFactory;
-use eve\common\IAccessorFactory;
+use eve\common\factory\IAccessorFactory;
 use eve\access\IAccessorException;
 use eve\access\IItemAccessor;
 use eve\access\TraversableAccessor;
