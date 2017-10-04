@@ -67,49 +67,6 @@ extends TestCase
 	}
 
 
-	public function test_array_merge_deep() {
-		$this->assertEquals([
-			'a' => 1,
-			'b' => 2,
-			'c' => [ 3 ],
-			'd' => 4,
-			'e' => [
-				'f' => 1,
-				'g' => [
-					'h' => 1,
-					'i' => 5,
-					'j' => [ 6 ],
-					'k' => 7
-				]
-			]
-		], \eve\driver\array_merge_deep([
-			'a' => 1,
-			'b' => 1,
-			'c' => 1,
-			'd' => [ 1 ],
-			'e' => [
-				'f' => 1,
-				'g' => [
-					'h' => 1,
-					'i' => 1,
-					'j' => 1,
-					'k' => 1
-				]
-			]
-		], [
-			'b' => 2,
-			'c' => [ 3 ],
-			'd' => 4,
-			'e' => [
-				'g' => [
-					'i' => 5,
-					'j' => [ 6 ],
-					'k' => 7
-				]
-			]
-		]));
-	}
-
 	public function testInheritance() {
 		$fab = $this->_produceFactory();
 
