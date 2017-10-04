@@ -5,7 +5,7 @@ namespace test\driver;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\IFactory;
-use eve\common\ISimpleFactory;
+use eve\common\factory\ISimpleFactory;
 use eve\factory\ICoreFactory;
 use eve\access\ITraversableAccessor;
 use eve\access\IItemMutator;

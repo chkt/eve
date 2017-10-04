@@ -2,8 +2,8 @@
 
 namespace eve\driver;
 
-use eve\common\ISimpleFactory;
 use eve\common\IDriver;
+use eve\common\factory\ISimpleFactory;
 use eve\factory\ICoreFactory;
 use eve\access\IItemAccessor;
 use eve\access\IItemMutator;

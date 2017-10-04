@@ -2,7 +2,7 @@
 
 namespace eve\factory;
 
-use eve\common\ISimpleFactory;
+use eve\common\factory\ISimpleFactory;
 
 
 

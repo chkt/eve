@@ -4,11 +4,11 @@ namespace test\inject;
 
 use PHPUnit\Framework\TestCase;
 
-use eve\common\ISimpleFactory;
+use eve\common\factory\ISimpleFactory;
+use eve\factory\ICoreFactory;
 use eve\access\IItemMutator;
 use eve\access\TraversableAccessor;
 use eve\access\TraversableMutator;
-use eve\factory\ICoreFactory;
 use eve\inject\IInjectable;
 use eve\inject\IInjectableIdentity;
 use eve\inject\Injector;

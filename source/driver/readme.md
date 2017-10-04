@@ -39,7 +39,7 @@ $driver = $factory->produce([
 the qualified name of a class implementing `\eve\factory\ICoreFactory` -
 The factory creating all objects
 * `'accessorFactoryName'`:
-the qualified name of a class implementing `\eve\common\ISimpleFactory`
+the qualified name of a class implementing `\eve\common\factory\ISimpleFactory`
 *and* supplying objects implementing `\eve\access\ITraversableAccessor` -
 The factory creating the accessor objects used in configuring dependencies
 * `'entityParserName'`:

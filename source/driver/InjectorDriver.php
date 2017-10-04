@@ -4,7 +4,7 @@ namespace eve\driver;
 
 use eve\access\ItemAccessor;
 
-use eve\common\ISimpleFactory;
+use eve\common\factory\ISimpleFactory;
 use eve\factory\ICoreFactory;
 use eve\access\IItemAccessor;
 use eve\access\IItemMutator;

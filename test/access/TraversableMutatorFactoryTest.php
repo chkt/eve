@@ -5,7 +5,7 @@ namespace test\access;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\IFactory;
-use eve\common\ISimpleFactory;
+use eve\common\factory\ISimpleFactory;
 use eve\factory\ICoreFactory;
 use eve\access\TraversableMutator;
 use eve\access\TraversableMutatorFactory;
