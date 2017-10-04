@@ -1,12 +1,12 @@
 <?php
 
-namespace test\factory;
+namespace test\common\factory;
 
 use PHPUnit\Framework\TestCase;
 
 use eve\common\IFactory;
 use eve\common\factory\ICoreFactory;
-use eve\factory\CoreFactory;
+use eve\common\factory\CoreFactory;
 
 
 

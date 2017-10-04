@@ -1,6 +1,6 @@
 <?php
 
-namespace test\factory;
+namespace test\common\factory;
 
 
 
