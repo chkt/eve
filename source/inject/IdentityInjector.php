@@ -26,8 +26,6 @@ extends Injector
 
 
 	public function produce(string $qname, array $config = []) {
-		if (empty($qname)) throw new \ErrorException();
-
 		$fab = $this->_fab;
 
 		if (!$fab->hasInterface($qname, IInjectableIdentity::class)) return parent::produce($qname, $config);

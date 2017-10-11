@@ -3,6 +3,7 @@
 namespace eve\inject;
 
 use eve\access\IItemAccessor;
+use eve\common\factory\ICoreFactory;
 use eve\driver\IInjectorDriver;
 use eve\inject\resolve\IInjectorResolver;
 
@@ -76,8 +77,6 @@ implements IInjector
 
 
 	public function produce(string $qname, array $config = []) {		//TODO: prevent dependency loops?
-		if (empty($qname)) throw new \ErrorException();
-
 		if (!$this->_fab->hasInterface($qname, IInjectable::class)) throw new \ErrorException(sprintf('INJ not injectable "%s"', $qname));
 
 		return $this->_produceInstance($qname, $this->_access->produce($config));
