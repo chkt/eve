@@ -4,10 +4,10 @@ namespace test\access;
 
 use PHPUnit\Framework\TestCase;
 
-use eve\access\IKeyMutator;
-use eve\access\IItemMutator;
-use eve\access\TraversableAccessor;
-use eve\access\TraversableMutator;
+use eve\common\access\IKeyMutator;
+use eve\common\access\IItemMutator;
+use eve\common\access\TraversableAccessor;
+use eve\common\access\TraversableMutator;
 
 
 

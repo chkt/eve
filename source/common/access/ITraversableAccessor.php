@@ -1,6 +1,6 @@
 <?php
 
-namespace eve\access;
+namespace eve\common\access;
 
 use eve\common\IGenerateable;
 use eve\common\IProjectable;

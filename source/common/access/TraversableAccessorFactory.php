@@ -1,13 +1,13 @@
 <?php
 
-namespace eve\access;
+namespace eve\common\access;
 
 use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ICoreFactory;
 
 
 
-final class TraversableMutatorFactory
+final class TraversableAccessorFactory
 implements ISimpleFactory
 {
 
@@ -20,6 +20,6 @@ implements ISimpleFactory
 
 
 	public function produce(array& $data) {
-		return $this->_fab->newInstance(TraversableMutator::class, [ & $data ]);
+		return $this->_fab->newInstance(TraversableAccessor::class, [ & $data ]);
 	}
 }

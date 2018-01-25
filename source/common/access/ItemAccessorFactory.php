@@ -1,13 +1,13 @@
 <?php
 
-namespace eve\access;
+namespace eve\common\access;
 
 use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ICoreFactory;
 
 
 
-final class TraversableAccessorFactory
+final class ItemAccessorFactory
 implements ISimpleFactory
 {
 
@@ -19,7 +19,7 @@ implements ISimpleFactory
 	}
 
 
-	public function produce(array& $data) {
-		return $this->_fab->newInstance(TraversableAccessor::class, [ & $data ]);
+	public function produce(array & $data) {
+		return $this->_fab->newInstance(ItemAccessor::class, [ & $data ]);
 	}
 }

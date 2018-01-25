@@ -1,13 +1,13 @@
 <?php
 
-namespace test\access;
+namespace test\common\access;
 
-use eve\access\AccessorException;
 use PHPUnit\Framework\TestCase;
 
-use eve\access\IKeyAccessor;
-use eve\access\IItemAccessor;
-use eve\access\ItemAccessor;
+use eve\common\access\IKeyAccessor;
+use eve\common\access\IItemAccessor;
+use eve\common\access\AccessorException;
+use eve\common\access\ItemAccessor;
 
 
 

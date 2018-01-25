@@ -1,14 +1,14 @@
 <?php
 
-namespace test\access;
+namespace test\common\access;
 
 use PHPUnit\Framework\TestCase;
 
 use eve\common\IFactory;
 use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ICoreFactory;
-use eve\access\ItemAccessor;
-use eve\access\ItemAccessorFactory;
+use eve\common\access\ItemAccessor;
+use eve\common\access\ItemAccessorFactory;
 
 
 

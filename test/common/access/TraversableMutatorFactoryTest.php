@@ -7,12 +7,12 @@ use PHPUnit\Framework\TestCase;
 use eve\common\IFactory;
 use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ICoreFactory;
-use eve\access\TraversableAccessorFactory;
-use eve\access\TraversableAccessor;
+use eve\common\access\TraversableMutator;
+use eve\common\access\TraversableMutatorFactory;
 
 
 
-final class TraversableAccessorFactoryTest
+final class TraversableMutatorFactoryTest
 extends TestCase
 {
 
@@ -24,7 +24,7 @@ extends TestCase
 		$ins
 			->expects($this->any())
 			->method('newInstance')
-			->with($this->equalTo(TraversableAccessor::class), $this->isType('array'))
+			->with($this->equalTo(TraversableMutator::class), $this->isType('array'))
 			->willReturnCallback(function(string $qname, array $args) {
 				return new $qname($args[0]);
 			});
@@ -32,15 +32,15 @@ extends TestCase
 		return $ins;
 	}
 
-	private function _produceAccessorFactory(ICoreFactory $factory = null) {
+	private function _produceMutatorFactory(ICoreFactory $factory = null) {
 		if (is_null($factory)) $factory = $this->_mockFactory();
 
-		return new TraversableAccessorFactory($factory);
+		return new TraversableMutatorFactory($factory);
 	}
 
 
 	public function testInheritance() {
-		$fab = $this->_produceAccessorFactory();
+		$fab = $this->_produceMutatorFactory();
 
 		$this->assertInstanceOf(ISimpleFactory::class, $fab);
 		$this->assertInstanceOf(IFactory::class, $fab);
@@ -51,10 +51,10 @@ extends TestCase
 			'foo' => 1,
 			'bar' => 2
 		];
-		$fab = $this->_produceAccessorFactory();
+		$fab = $this->_produceMutatorFactory();
 		$ins = $fab->produce($data);
 
-		$this->assertInstanceOf(TraversableAccessor::class, $ins);
+		$this->assertInstanceOf(TraversableMutator::class, $ins);
 		$this->assertEquals(1, $ins->getItem('foo'));
 		$this->assertEquals(2, $ins->getItem('bar'));
 

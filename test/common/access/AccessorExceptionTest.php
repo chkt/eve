@@ -1,11 +1,11 @@
 <?php
 
-namespace test\access;
+namespace test\common\access;
 
 use PHPUnit\Framework\TestCase;
 
-use eve\access\IAccessorException;
-use eve\access\AccessorException;
+use eve\common\access\IAccessorException;
+use eve\common\access\AccessorException;
 
 
 

@@ -6,8 +6,8 @@ use PHPUnit\Framework\TestCase;
 
 use eve\common\IGenerateable;
 use eve\common\IProjectable;
-use eve\access\ItemAccessor;
-use eve\access\TraversableAccessor;
+use eve\common\access\ItemAccessor;
+use eve\common\access\TraversableAccessor;
 
 
 
