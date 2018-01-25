@@ -3,7 +3,6 @@
 namespace eve\inject;
 
 use eve\access\IItemAccessor;
-use eve\common\factory\ICoreFactory;
 use eve\driver\IInjectorDriver;
 use eve\inject\resolve\IInjectorResolver;
 
