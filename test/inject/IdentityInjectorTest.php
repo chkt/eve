@@ -6,9 +6,9 @@ use PHPUnit\Framework\TestCase;
 
 use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ICoreFactory;
-use eve\access\IItemMutator;
-use eve\access\TraversableAccessor;
-use eve\access\TraversableMutator;
+use eve\common\access\IItemMutator;
+use eve\common\access\TraversableAccessor;
+use eve\common\access\TraversableMutator;
 use eve\inject\IInjectable;
 use eve\inject\IInjectableIdentity;
 use eve\inject\Injector;

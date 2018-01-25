@@ -2,7 +2,7 @@
 
 namespace eve\inject;
 
-use eve\access\IItemAccessor;
+use eve\common\access\IItemAccessor;
 use eve\driver\IInjectorDriver;
 use eve\inject\resolve\IInjectorResolver;
 

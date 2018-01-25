@@ -2,7 +2,7 @@
 
 namespace eve\inject;
 
-use eve\access\ITraversableAccessor;
+use eve\common\access\ITraversableAccessor;
 
 
 

@@ -2,7 +2,7 @@
 
 namespace eve\inject\resolve;
 
-use eve\access\ITraversableAccessor;
+use eve\common\access\ITraversableAccessor;
 use eve\driver\IInjectorHost;
 use eve\inject\IInjector;
 

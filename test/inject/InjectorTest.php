@@ -2,12 +2,12 @@
 
 namespace test\inject;
 
-use eve\access\TraversableAccessor;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ICoreFactory;
-use eve\access\ITraversableAccessor;
+use eve\common\access\ITraversableAccessor;
+use eve\common\access\TraversableAccessor;
 use eve\entity\IEntityParser;
 use eve\entity\EntityParser;
 use eve\driver\IInjectorDriver;

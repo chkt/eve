@@ -2,7 +2,7 @@
 
 namespace eve\inject\resolve;
 
-use eve\access\ITraversableAccessor;
+use eve\common\access\ITraversableAccessor;
 use eve\inject\IInjectableFactory;
 use eve\inject\IInjector;
 

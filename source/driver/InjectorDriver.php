@@ -2,12 +2,11 @@
 
 namespace eve\driver;
 
-use eve\access\ItemAccessor;
-
 use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ICoreFactory;
-use eve\access\IItemAccessor;
-use eve\access\IItemMutator;
+use eve\common\access\IItemAccessor;
+use eve\common\access\IItemMutator;
+use eve\common\access\ItemAccessor;
 use eve\entity\IEntityParser;
 use eve\inject\IInjector;
 use eve\provide\ILocator;

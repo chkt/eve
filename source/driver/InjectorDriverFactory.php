@@ -5,8 +5,8 @@ namespace eve\driver;
 use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ICoreFactory;
 use eve\common\factory\ASimpleFactory;
-use eve\access\ITraversableAccessor;
-use eve\access\IItemMutator;
+use eve\common\access\ITraversableAccessor;
+use eve\common\access\IItemMutator;
 use eve\entity\IEntityParser;
 use eve\inject\IInjector;
 use eve\provide\ILocator;
@@ -19,7 +19,7 @@ extends ASimpleFactory
 
 	protected function _getConfigDefaults() : array {
 		return [
-			'accessorFactoryName' => \eve\access\TraversableAccessorFactory::class,
+			'accessorFactoryName' => \eve\common\access\TraversableAccessorFactory::class,
 			'entityParserName' => \eve\entity\EntityParser::class,
 			'injectorName' => \eve\inject\IdentityInjector::class,
 			'locatorName' => \eve\provide\ProviderProvider::class,

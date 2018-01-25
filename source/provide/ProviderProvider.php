@@ -2,7 +2,7 @@
 
 namespace eve\provide;
 
-use eve\access\ITraversableAccessor;
+use eve\common\access\ITraversableAccessor;
 use eve\driver\IInjectorDriver;
 use eve\inject\IInjector;
 

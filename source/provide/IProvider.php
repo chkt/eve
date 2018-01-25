@@ -2,7 +2,7 @@
 
 namespace eve\provide;
 
-use eve\access\IItemAccessor;
+use eve\common\access\IItemAccessor;
 use eve\inject\IInjectable;
 
 
