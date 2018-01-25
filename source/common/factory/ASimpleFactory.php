@@ -8,6 +8,14 @@ abstract class ASimpleFactory
 implements ISimpleFactory
 {
 
+	private $_core;
+
+
+	public function __construct(ICoreFactory $core) {
+		$this->_core = $core;
+	}
+
+
 	private function _mergeConfig(array $a, array $b) : array {
 		foreach ($b as $key => $value) {
 			if (
@@ -22,15 +30,17 @@ implements ISimpleFactory
 	}
 
 
-	abstract protected function _getConfigDefaults() : array;
+	protected function _getConfigDefaults() : array {
+		return [];
+	}
 
-	abstract protected function _produceInstance(array $config);
+	abstract protected function _produceInstance(ICoreFactory $core, array $config);
 
 
 	public function produce(array& $config = []) {
 		$defaults = $this->_getConfigDefaults();
 		$settings = $this->_mergeConfig($defaults, $config);
 
-		return $this->_produceInstance($settings);
+		return $this->_produceInstance($this->_core, $settings);
 	}
 }
