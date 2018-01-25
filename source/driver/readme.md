@@ -4,9 +4,11 @@
 Creating a basic driver is easy:
 
 ```php
+use eve\common\factory\CoreFactory;
 use eve\driver\InjectorDriverFactory;
 
-$factory = new InjectorDriverFactory();
+$core = new CoreFactory();
+$factory = $core->newInstance(InjectorDriverFactory::class, [ $core ]);
 $driver = $factory->produce();
 ```
 
@@ -15,7 +17,6 @@ their respective defaults:
 
 ```php
 $driver = $factory->produce([
-  'coreFactoryName' => \eve\factory\CoreFactory::class,
   'accessorFactoryName' => \eve\access\TraversableAccessorFactory::class,
   'entityParserName' => \eve\entity\EntityParser::class,
   'injectorName' => \eve\inject\IdentityInjector::class,
@@ -35,9 +36,6 @@ $driver = $factory->produce([
 
 ### Options
 
-* `'coreFactoryName'`:
-the qualified name of a class implementing `\eve\common\factory\ICoreFactory` -
-The factory creating all objects
 * `'accessorFactoryName'`:
 the qualified name of a class implementing `\eve\common\factory\ISimpleFactory`
 *and* supplying objects implementing `\eve\access\ITraversableAccessor` -
@@ -71,7 +69,6 @@ An alternative syntax exists for supplying pre-created objects for one or more d
 
 ```php
 $driver = $factory->produce([
-  'coreFactory' => $coreFactory,
   'accessorFactory' => $accessorFactory,
   'entityParser' => $entityParser,
   'injector' => $injector,

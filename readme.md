@@ -38,11 +38,17 @@ The injector depends on a couple of helpers to resolve and inject dependencies.
 All of these are combined into the **InjectorDriver**.
 
 ```php
-use \eve\driver\InjectorDriverFactory();
+use \eve\common\factory\CoreFactory;
+use \eve\driver\InjectorDriverFactory;
 
-$factory = new InjectorDriverFactory();
+$core = new CoreFactory();
+$factory = $core->newInstance(InjectorDriverFactory::class, [ $core ]);
 $driver = $factory->produce([...]);
 ```
+
+The *first* line creates the **CoreFactory**, which supplies the basic means of instantiating objects.
+In the *second* line the CoreFactory is used to create the **InjectorDriverFactory**,
+which in line *three* creates the **InjectorDriver**.
 
 The types of injectable objects depend on the configuration of the driver.
 All configuration options for creating the driver are listed in the [driver folder](./source/driver/readme.md).
@@ -90,7 +96,7 @@ implements IInjectable
   }
 
 
-  public function __construct(IInjector $injector, ExternalObject $object) {}
+  public function __construct(IInjector $injector, ExternalObject $object, array $options) {}
 
 }
 
