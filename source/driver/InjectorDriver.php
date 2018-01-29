@@ -8,6 +8,7 @@ use eve\common\access\IItemMutator;
 use eve\common\access\ItemAccessor;
 use eve\entity\IEntityParser;
 use eve\inject\IInjector;
+use eve\inject\cache\IKeyEncoder;
 use eve\provide\ILocator;
 
 
@@ -39,6 +40,10 @@ implements IInjectorDriver
 		return $this->getItem(self::ITEM_ACCESSOR_FACTORY);
 	}
 
+
+	public function getKeyEncoder() : IKeyEncoder {
+		return $this->getItem(self::ITEM_KEY_ENCODER);
+	}
 
 	public function getInstanceCache() : IItemMutator {
 		return $this->getItem(self::ITEM_INSTANCE_CACHE);
