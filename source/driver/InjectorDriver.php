@@ -4,7 +4,6 @@ namespace eve\driver;
 
 use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ICoreFactory;
-use eve\common\access\IItemAccessor;
 use eve\common\access\IItemMutator;
 use eve\common\access\ItemAccessor;
 use eve\entity\IEntityParser;
@@ -40,10 +39,6 @@ implements IInjectorDriver
 		return $this->getItem(self::ITEM_ACCESSOR_FACTORY);
 	}
 
-
-	public function getReferences() : IItemAccessor {
-		return $this->getItem(self::ITEM_REFERENCES);
-	}
 
 	public function getInstanceCache() : IItemMutator {
 		return $this->getItem(self::ITEM_INSTANCE_CACHE);

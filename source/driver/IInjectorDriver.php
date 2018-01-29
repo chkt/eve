@@ -5,7 +5,6 @@ namespace eve\driver;
 use eve\common\IDriver;
 use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ICoreFactory;
-use eve\common\access\IItemAccessor;
 use eve\common\access\IItemMutator;
 use eve\entity\IEntityParser;
 
@@ -18,7 +17,6 @@ extends IDriver, IInjectorHost
 	const ITEM_CORE_FACTORY = 'coreFactory';
 	const ITEM_ACCESSOR_FACTORY = 'accessorFactory';
 	const ITEM_ENTITY_PARSER = 'entityParser';
-	const ITEM_REFERENCES = 'references';
 	const ITEM_INSTANCE_CACHE = 'instanceCache';
 
 
@@ -29,8 +27,6 @@ extends IDriver, IInjectorHost
 
 	public function getEntityParser() : IEntityParser;
 
-
-	public function getReferences() : IItemAccessor;
 
 	public function getInstanceCache() : IItemMutator;
 }
