@@ -12,6 +12,7 @@ extends Injector
 
 	private $_fab;
 	private $_access;
+	private $_encoder;
 	private $_cache;
 
 
@@ -21,6 +22,7 @@ extends Injector
 
 		$this->_fab = $driver->getCoreFactory();
 		$this->_access = $driver->getAccessorFactory();
+		$this->_encoder = $driver->getKeyEncoder();
 		$this->_cache = $driver->getInstanceCache();
 	}
 
@@ -33,13 +35,11 @@ extends Injector
 		$access = $this->_access->produce($config);
 		$cache = $this->_cache;
 
-		$id = implode(':', [
-			$qname,
-			$fab->callMethod($qname, 'getInstanceIdentity', [ $access ])
-		]);
+		$id = $fab->callMethod($qname, 'getInstanceIdentity', [ $access ]);
+		$key = $this->_encoder->encode($qname, $id);
 
-		if (!$cache->hasKey($id)) $cache->setItem($id, $this->_produceInstance($qname, $access));
+		if (!$cache->hasKey($key)) $cache->setItem($key, $this->_produceInstance($qname, $access));
 
-		return $cache->getItem($id);
+		return $cache->getItem($key);
 	}
 }
