@@ -58,15 +58,6 @@ extends TestCase
 		$this->assertSame($locator, $driver->getLocator());
 	}
 
-	public function testGetReferences() {
-		$refs = $this->getMockBuilder(IItemAccessor::class)->getMock();
-		$deps = [ 'references' => $refs];
-
-		$driver = $this->_produceDriver($deps);
-
-		$this->assertSame($refs, $driver->getReferences());
-	}
-
 	public function testGetEntityParser() {
 		$parser = $this->getMockBuilder(IEntityParser::class)->getMock();
 		$deps = [ 'entityParser' => $parser];
