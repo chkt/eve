@@ -12,6 +12,7 @@ use eve\common\access\IItemMutator;
 use eve\common\access\TraversableAccessor;
 use eve\entity\IEntityParser;
 use eve\inject\IInjector;
+use eve\inject\cache\IKeyEncoder;
 use eve\provide\ILocator;
 use eve\driver\InjectorDriver;
 use eve\driver\InjectorDriverFactory;
@@ -107,6 +108,7 @@ extends TestCase
 
 		$config = [
 			'accessorFactoryName' => ISimpleFactory::class,
+			'keyEncoderName' => IKeyEncoder::class,
 			'instanceCacheName' => IItemMutator::class,
 			'entityParserName' => IEntityParser::class,
 			'injectorName' => IInjector::class,
@@ -121,6 +123,7 @@ extends TestCase
 
 		$this->assertInstanceOf(InjectorDriver::class, $driver);
 		$this->assertInstanceOf(ISimpleFactory::class, $driver->getAccessorFactory());
+		$this->assertInstanceOf(IKeyEncoder::class, $driver->getKeyEncoder());
 		$this->assertInstanceOf(IItemMutator::class, $driver->getInstanceCache());
 		$this->assertInstanceOf(IEntityParser::class, $driver->getEntityParser());
 		$this->assertInstanceOf(IInjector::class, $driver->getInjector());
@@ -156,6 +159,7 @@ extends TestCase
 				return new TraversableAccessor($data);
 			});
 
+		$keyEncoder = $this->_mockInterface(IKeyEncoder::class);
 		$cache = $this->_mockInterface(IItemMutator::class);
 		$parser = $this->_mockInterface(IEntityParser::class);
 		$injector = $this->_mockInterface(IInjector::class);
@@ -164,6 +168,7 @@ extends TestCase
 
 		$config = [
 			'accessorFactory' => $accessor,
+			'keyEncoder' => $keyEncoder,
 			'instanceCache' => $cache,
 			'entityParser' => $parser,
 			'injector' => $injector,
