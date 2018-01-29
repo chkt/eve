@@ -121,7 +121,6 @@ extends TestCase
 
 		$this->assertInstanceOf(InjectorDriver::class, $driver);
 		$this->assertInstanceOf(ISimpleFactory::class, $driver->getAccessorFactory());
-		$this->assertInstanceOf(ITraversableAccessor::class, $driver->getReferences());
 		$this->assertInstanceOf(IItemMutator::class, $driver->getInstanceCache());
 		$this->assertInstanceOf(IEntityParser::class, $driver->getEntityParser());
 		$this->assertInstanceOf(IInjector::class, $driver->getInjector());
