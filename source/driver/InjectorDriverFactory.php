@@ -20,6 +20,7 @@ extends ASimpleFactory
 	protected function _getConfigDefaults() : array {
 		return [
 			'accessorFactoryName' => \eve\common\access\TraversableAccessorFactory::class,
+			'driverName' => \eve\driver\InjectorDriver::class,
 			'entityParserName' => \eve\entity\EntityParser::class,
 			'injectorName' => \eve\inject\IdentityInjector::class,
 			'locatorName' => \eve\provide\ProviderProvider::class,
@@ -32,7 +33,7 @@ extends ASimpleFactory
 			],
 			'providers' => [],
 			'references' => [],
-			'instanceCacheName' => \eve\access\TraversableMutator::class
+			'instanceCacheName' => \eve\common\access\TraversableMutator::class
 		];
 	}
 
@@ -41,6 +42,11 @@ extends ASimpleFactory
 		return array_key_exists('accessorFactory', $config) ?
 			$config['accessorFactory'] :
 			$core->newInstance($config['accessorFactoryName'], [ $core ]);
+	}
+
+
+	protected function _produceDriver(ICoreFactory $core, ITraversableAccessor $config, array& $dependencies) : IInjectorDriver {
+		return $core->newInstance($config->getItem('driverName'), [ & $dependencies ]);
 	}
 
 
@@ -99,8 +105,8 @@ extends ASimpleFactory
 			IInjectorDriver::ITEM_ACCESSOR_FACTORY => $access
 		];
 
-		$driver = $core->newInstance(InjectorDriver::class, [ & $deps ]);
 		$data = $access->produce($config);
+		$driver = $this->_produceDriver($core, $data, $deps);
 
 		$deps[IInjectorDriver::ITEM_REFERENCES] = $this->_produceReferences($driver, $data);
 		$deps[IInjectorDriver::ITEM_INSTANCE_CACHE] = $this->_produceInstanceCache($driver, $data);
