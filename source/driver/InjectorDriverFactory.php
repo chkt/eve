@@ -27,12 +27,10 @@ extends ASimpleFactory
 			'resolvers' => [
 				IInjector::TYPE_INJECTOR => \eve\inject\resolve\HostResolver::class,
 				IInjector::TYPE_LOCATOR => \eve\inject\resolve\HostResolver::class,
-				IInjector::TYPE_RESOLVE => \eve\inject\resolve\ReferenceResolver::class,
 				IInjector::TYPE_ARGUMENT => \eve\inject\resolve\ArgumentResolver::class,
 				IInjector::TYPE_FACTORY => \eve\inject\resolve\FactoryResolver::class
 			],
 			'providers' => [],
-			'references' => [],
 			'instanceCacheName' => \eve\common\access\TraversableMutator::class
 		];
 	}
@@ -49,14 +47,6 @@ extends ASimpleFactory
 		return $core->newInstance($config->getItem('driverName'), [ & $dependencies ]);
 	}
 
-
-	protected function _produceReferences(IInjectorDriver $driver, ITraversableAccessor $config) : ITraversableAccessor {
-		$refs = $config->getItem('references');
-
-		return $driver
-			->getAccessorFactory()
-			->produce($refs);
-	}
 
 	protected function _produceInstanceCache(IInjectorDriver $driver, ITraversableAccessor $config) : IItemMutator {
 		return $config->hasKey('instanceCache') ?
@@ -108,7 +98,6 @@ extends ASimpleFactory
 		$data = $access->produce($config);
 		$driver = $this->_produceDriver($core, $data, $deps);
 
-		$deps[IInjectorDriver::ITEM_REFERENCES] = $this->_produceReferences($driver, $data);
 		$deps[IInjectorDriver::ITEM_INSTANCE_CACHE] = $this->_produceInstanceCache($driver, $data);
 		$deps[IInjectorDriver::ITEM_ENTITY_PARSER] = $this->_produceEntityParser($driver, $data);
 		$deps[IInjectorDriver::ITEM_INJECTOR] = $this->_produceInjector($driver, $data);
