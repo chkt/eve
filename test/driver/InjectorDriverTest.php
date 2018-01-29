@@ -16,6 +16,7 @@ use eve\driver\IInjectorHost;
 use eve\driver\IInjectorDriver;
 use eve\driver\InjectorDriver;
 use eve\inject\IInjector;
+use eve\inject\cache\IKeyEncoder;
 use eve\provide\ILocator;
 
 
@@ -83,6 +84,15 @@ extends TestCase
 		$driver = $this->_produceDriver($deps);
 
 		$this->assertSame($fab, $driver->getAccessorFactory());
+	}
+
+	public function testGetKeyEncoder() {
+		$encoder = $this->getMockBuilder(IKeyEncoder::class)->getMock();
+		$deps = [ 'keyEncoder' => $encoder ];
+
+		$driver = $this->_produceDriver($deps);
+
+		$this->assertSame($encoder , $driver->getKeyEncoder());
 	}
 
 	public function testGetInstanceCache() {
