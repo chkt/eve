@@ -13,6 +13,7 @@ use eve\inject\IInjectable;
 use eve\inject\IInjectableIdentity;
 use eve\inject\Injector;
 use eve\inject\IdentityInjector;
+use eve\inject\cache\IKeyEncoder;
 use eve\driver\IInjectorDriver;
 
 
@@ -98,10 +99,29 @@ extends TestCase
 		return $ins;
 	}
 
-	private function _mockDriver(IItemMutator $cache = null) : IInjectorDriver {
+	private function _mockKeyEncoder() {
+		$ins = $this
+			->getMockBuilder(IKeyEncoder::class)
+			->getMock();
+
+		$ins
+			->method('encode')
+			->with(
+				$this->isType('string'),
+				$this->isType('string')
+			)
+			->willReturnCallback(function(string $qname, string $id) {
+				return $qname . ':' . $id;
+			});
+
+		return $ins;
+}
+
+	private function _mockDriver(IKeyEncoder $encoder = null, IItemMutator $cache = null) : IInjectorDriver {
 		$factory = $this->_mockFactory();
 		$accessor = $this->_mockAccessorFactory();
 
+		if (is_null($encoder)) $encoder = $this->_mockKeyEncoder();
 		if (is_null($cache)) $cache = $this->_produceCache();
 
 		$ins = $this
@@ -119,6 +139,11 @@ extends TestCase
 			->method('getAccessorFactory')
 			->with()
 			->willReturn($accessor);
+
+		$ins
+			->expects($this->once())
+			->method('getKeyEncoder')
+			->willReturn($encoder);
 
 		$ins
 			->expects($this->once())
@@ -151,8 +176,9 @@ extends TestCase
 	}
 
 	public function testProduce() {
+		$encoder = $this->_mockKeyEncoder();
 		$cache = $this->_produceCache();
-		$driver = $this->_mockDriver($cache);
+		$driver = $this->_mockDriver($encoder, $cache);
 		$injector = $this->_produceInjector($driver);
 
 		$a =  $injector->produce(IInjectableIdentity::class, [
@@ -183,8 +209,9 @@ extends TestCase
 	}
 
 	public function testProduce_noIdentity() {
+		$encoder = $this->_mockKeyEncoder();
 		$cache = $this->_produceCache();
-		$driver = $this->_mockDriver($cache);
+		$driver = $this->_mockDriver($encoder, $cache);
 		$injector = $this->_produceInjector($driver);
 
 		$a = $injector->produce(IInjectable::class, [
