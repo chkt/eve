@@ -9,6 +9,7 @@ use eve\common\access\ITraversableAccessor;
 use eve\common\access\IItemMutator;
 use eve\entity\IEntityParser;
 use eve\inject\IInjector;
+use eve\inject\cache\IKeyEncoder;
 use eve\provide\ILocator;
 
 
@@ -31,6 +32,7 @@ extends ASimpleFactory
 				IInjector::TYPE_FACTORY => \eve\inject\resolve\FactoryResolver::class
 			],
 			'providers' => [],
+			'keyEncoderName' => \eve\inject\cache\KeyEncoder::class,
 			'instanceCacheName' => \eve\common\access\TraversableMutator::class
 		];
 	}
@@ -47,6 +49,14 @@ extends ASimpleFactory
 		return $core->newInstance($config->getItem('driverName'), [ & $dependencies ]);
 	}
 
+
+	protected function _produceKeyEncoder(IInjectorDriver $driver, ITraversableAccessor $config) : IKeyEncoder {
+		return $config->hasKey('keyEncoder') ?
+			$config->getItem('keyEncoder') :
+			$driver
+			->getCoreFactory()
+			->newInstance($config->getItem('keyEncoderName'), [ $driver->getCoreFactory() ]);
+	}
 
 	protected function _produceInstanceCache(IInjectorDriver $driver, ITraversableAccessor $config) : IItemMutator {
 		return $config->hasKey('instanceCache') ?
@@ -98,6 +108,7 @@ extends ASimpleFactory
 		$data = $access->produce($config);
 		$driver = $this->_produceDriver($core, $data, $deps);
 
+		$deps[IInjectorDriver::ITEM_KEY_ENCODER] = $this->_produceKeyEncoder($driver, $data);
 		$deps[IInjectorDriver::ITEM_INSTANCE_CACHE] = $this->_produceInstanceCache($driver, $data);
 		$deps[IInjectorDriver::ITEM_ENTITY_PARSER] = $this->_produceEntityParser($driver, $data);
 		$deps[IInjectorDriver::ITEM_INJECTOR] = $this->_produceInjector($driver, $data);
