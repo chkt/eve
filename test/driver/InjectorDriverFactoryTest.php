@@ -7,14 +7,13 @@ use PHPUnit\Framework\TestCase;
 use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ICoreFactory;
 use eve\common\factory\ASimpleFactory;
-use eve\common\access\ITraversableAccessor;
 use eve\common\access\IItemMutator;
 use eve\common\access\TraversableAccessor;
 use eve\entity\IEntityParser;
 use eve\inject\IInjector;
 use eve\inject\cache\IKeyEncoder;
 use eve\provide\ILocator;
-use eve\driver\InjectorDriver;
+use eve\driver\IInjectorDriver;
 use eve\driver\InjectorDriverFactory;
 
 
@@ -28,52 +27,22 @@ extends TestCase
 			->getMockBuilder($qname)
 			->getMock();
 
-		foreach ($args as $key => $value) {
+		foreach ($args as $key => & $value) {
 			$prop = (is_numeric($key) ? 'p' : '') . $key;
 
-			$ins->$prop = $value;
+			$ins->$prop =& $value;
 		}
 
 		return $ins;
 	}
 
 
-	private function _mockAccessorFactory() : ISimpleFactory {
+	private function _mockBaseFactory() {
 		$ins = $this
-			->getMockBuilder(ISimpleFactory::class)
-			->getMock();
-
-		$ins
-			->expects($this->any())
-			->method('produce')
-			->with($this->isType('array'))
-			->willReturnCallback(function(array& $data) {
-				return new TraversableAccessor($data);
-			});
-
-		return $ins;
-	}
-
-
-	private function _produceDriverFactory(ICoreFactory $core) {
-		return new InjectorDriverFactory($core);
-	}
-
-
-	public function testInheritance() {
-		$core = $this->_mockInterface(ICoreFactory::class);
-		$fab = $this->_produceDriverFactory($core);
-
-		$this->assertInstanceOf(ASimpleFactory::class, $fab);
-	}
-
-	public function testProduce_names() {
-		$core = $this
 			->getMockBuilder(ICoreFactory::class)
 			->getMock();
 
-		$core
-			->expects($this->any())
+		$ins
 			->method('newInstance')
 			->with(
 				$this->isType('string'),
@@ -83,105 +52,134 @@ extends TestCase
 				)
 			)
 			->willReturnCallback(function(string $qname, array $args = []) {
-				if ($qname === InjectorDriver::class) return new InjectorDriver(...$args);
-				else if ($qname === ISimpleFactory::class) return $this->_mockAccessorFactory();
-				else if ($qname === IInjector::class) {
-					$injector = $this->_mockInterface(IInjector::class, $args);
-
-					$injector
-						->expects($this->once())
-						->method('produce')
-						->with(
-							$this->equalTo(ILocator::class),
-							$this->isType('array')
-						)
-						->willReturnCallback(function($qname, array $args = []) {
-							return $this->_mockInterface($qname, $args);
-						});
-
-					return $injector;
-				}
-				else return $this->_mockInterface($qname, $args);
+				return $this->_buildDependency($qname, $args);
 			});
 
-		$fab = $this->_produceDriverFactory($core);
-
-		$config = [
-			'accessorFactoryName' => ISimpleFactory::class,
-			'keyEncoderName' => IKeyEncoder::class,
-			'instanceCacheName' => IItemMutator::class,
-			'entityParserName' => IEntityParser::class,
-			'injectorName' => IInjector::class,
-			'locatorName' => ILocator::class,
-			'providers' => [
-				'foo' => 'bar',
-				'baz' => 'quux'
-			]
-		];
-
-		$driver = $fab->produce($config);
-
-		$this->assertInstanceOf(InjectorDriver::class, $driver);
-		$this->assertInstanceOf(ISimpleFactory::class, $driver->getAccessorFactory());
-		$this->assertInstanceOf(IKeyEncoder::class, $driver->getKeyEncoder());
-		$this->assertInstanceOf(IItemMutator::class, $driver->getInstanceCache());
-		$this->assertInstanceOf(IEntityParser::class, $driver->getEntityParser());
-		$this->assertInstanceOf(IInjector::class, $driver->getInjector());
-		$this->assertSame($driver, $driver->getInjector()->p0);
-		$this->assertInternalType('array', $driver->getInjector()->p1);
-		$this->assertInstanceOf(ILocator::class, $driver->getLocator());
-		$this->assertSame($driver, $driver->getLocator()->driver);
-		$this->assertSame($config['providers'], $driver->getLocator()->providerNames);
+		return $ins;
 	}
 
-	public function testProduce_instances() {
-		$core = $this
-			->getMockBuilder(ICoreFactory::class)
-			->getMock();
-
-		$core
-			->expects($this->once())
-			->method('newInstance')
-			->with($this->equalTo(InjectorDriver::class))
-			->willReturnCallback(function(string $qname, array $args) {
-				return new InjectorDriver(...$args);
-			});
-
-		$accessor = $this
+	private function _mockAccessorFactory() : ISimpleFactory {
+		$ins = $this
 			->getMockBuilder(ISimpleFactory::class)
 			->getMock();
 
-		$accessor
-			->expects($this->any())
+		$ins
 			->method('produce')
 			->with($this->isType('array'))
 			->willReturnCallback(function(array& $data) {
 				return new TraversableAccessor($data);
 			});
 
-		$keyEncoder = $this->_mockInterface(IKeyEncoder::class);
-		$cache = $this->_mockInterface(IItemMutator::class);
-		$parser = $this->_mockInterface(IEntityParser::class);
-		$injector = $this->_mockInterface(IInjector::class);
-		$locator = $this->_mockInterface(ILocator::class);
-		$fab = $this->_produceDriverFactory($core);
+		return $ins;
+	}
 
-		$config = [
-			'accessorFactory' => $accessor,
-			'keyEncoder' => $keyEncoder,
-			'instanceCache' => $cache,
-			'entityParser' => $parser,
-			'injector' => $injector,
-			'locator' => $locator
+	private function _mockDriver(array $args) {
+		$ins = $this->_mockInterface(IInjectorDriver::class, $args);
+
+		$ins
+			->method('getCoreFactory')
+			->willReturnCallback(function() use ($args) {
+				return $args[0]['coreFactory'];
+			});
+
+		$ins
+			->method('getInjector')
+			->willReturnCallback(function() use ($args) {
+				return $args[0]['injector'];
+			});
+
+		return $ins;
+	}
+
+	private function _mockInjector($args) {
+		$ins = $this->_mockInterface(IInjector::class, $args);
+
+		$ins
+			->method('produce')
+			->with(
+				$this->isType('string'),
+				$this->logicalOr(
+					$this->isType('array'),
+					$this->isNull()
+				)
+			)
+			->willReturnCallback(function(string $qname, array $args = []) {
+				return $this->_buildDependency($qname, $args);
+			});
+
+		return $ins;
+	}
+
+
+	private function _buildDependency(string $qname, array $args) {
+		$map = [
+			\eve\common\access\TraversableAccessorFactory::class => \eve\common\factory\ISimpleFactory::class,
+			\eve\common\access\TraversableMutator::class => \eve\common\access\IItemMutator::class,
+			\eve\driver\InjectorDriver::class => \eve\driver\IInjectorDriver::class,
+			\eve\inject\cache\KeyEncoder::class => \eve\inject\cache\IKeyEncoder::class,
+			\eve\inject\IdentityInjector::class => \eve\inject\IInjector::class,
+			\eve\entity\EntityParser::class => \eve\entity\IEntityParser::class,
+			\eve\provide\ProviderProvider::class => \eve\provide\ILocator::class
 		];
 
-		$driver = $fab->produce($config);
+		$this->assertArrayHasKey($qname, $map);
 
-		$this->assertInstanceOf(InjectorDriver::class, $driver);
-		$this->assertSame($accessor, $driver->getAccessorFactory());
-		$this->assertSame($cache, $driver->getInstanceCache());
-		$this->assertSame($parser, $driver->getEntityParser());
-		$this->assertSame($injector, $driver->getInjector());
-		$this->assertSame($locator, $driver->getLocator());
+		$iname = $map[$qname];
+
+		switch ($iname) {
+			case \eve\common\factory\ISimpleFactory::class : return $this->_mockAccessorFactory($args);
+			case \eve\driver\IInjectorDriver::class : return $this->_mockDriver($args);
+			case \eve\inject\IInjector::class : return $this->_mockInjector($args);
+			default : return $this->_mockInterface($iname, $args);
+		}
+	}
+
+
+	private function _produceDriverFactory(ICoreFactory $base = null) {
+		if (is_null($base)) $base = $this->_mockInterface(ICoreFactory::class);
+
+		return new InjectorDriverFactory($base);
+	}
+
+
+	public function testInheritance() {
+		$fab = $this->_produceDriverFactory();
+
+		$this->assertInstanceOf(ASimpleFactory::class, $fab);
+	}
+
+	public function testProduce() {
+		$base = $this->_mockBaseFactory();
+		$driverFactory = $this->_produceDriverFactory($base);
+
+		$config = [
+			'resolvers' => [
+				IInjector::TYPE_INJECTOR => 'foo',
+				IInjector::TYPE_LOCATOR => 'bar',
+				IInjector::TYPE_ARGUMENT => 'baz',
+				IInjector::TYPE_FACTORY => 'quux'
+			],
+			'providers' => [
+				'foo' => 'bar',
+				'baz' => 'quux'
+			]
+		];
+
+		$driver = $driverFactory->produce($config);
+
+		$this->assertInstanceOf(IInjectorDriver::class, $driver);
+		$this->assertInstanceOf(ICoreFactory::class, $driver->p0['coreFactory']);
+		$this->assertInstanceOf(ISimpleFactory::class, $driver->p0['accessorFactory']);
+		$this->assertInstanceOf(IKeyEncoder::class, $driver->p0['keyEncoder']);
+		$this->assertSame($driver->p0['coreFactory'], $driver->p0['keyEncoder']->p0);
+		$this->assertInstanceOf(IItemMutator::class, $driver->p0['instanceCache']);
+		$this->assertInternalType('array', $driver->p0['instanceCache']->p0);
+		$this->assertInstanceOf(IInjector::class, $driver->p0['injector']);
+		$this->assertSame($driver, $driver->p0['injector']->p0);
+		$this->assertSame($config['resolvers'], $driver->p0['injector']->p1);
+		$this->assertInstanceOf(IEntityParser::class, $driver->p0['entityParser']);
+		$this->assertInstanceOf(ILocator::class, $driver->p0['locator']);
+		$this->assertSame($driver, $driver->p0['locator']->driver);
+		$this->assertSame($config['providers'], $driver->p0['locator']->providerNames);
 	}
 }

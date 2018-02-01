@@ -7,10 +7,16 @@ use eve\common\factory\ICoreFactory;
 use eve\common\factory\ASimpleFactory;
 use eve\common\access\ITraversableAccessor;
 use eve\common\access\IItemMutator;
+use eve\common\access\TraversableMutator;
+use eve\common\access\TraversableAccessorFactory;
 use eve\entity\IEntityParser;
+use eve\entity\EntityParser;
 use eve\inject\IInjector;
+use eve\inject\IdentityInjector;
 use eve\inject\cache\IKeyEncoder;
+use eve\inject\cache\KeyEncoder;
 use eve\provide\ILocator;
+use eve\provide\ProviderProvider;
 
 
 
@@ -20,93 +26,64 @@ extends ASimpleFactory
 
 	protected function _getConfigDefaults() : array {
 		return [
-			'accessorFactoryName' => \eve\common\access\TraversableAccessorFactory::class,
-			'driverName' => \eve\driver\InjectorDriver::class,
-			'entityParserName' => \eve\entity\EntityParser::class,
-			'injectorName' => \eve\inject\IdentityInjector::class,
-			'locatorName' => \eve\provide\ProviderProvider::class,
 			'resolvers' => [
 				IInjector::TYPE_INJECTOR => \eve\inject\resolve\HostResolver::class,
 				IInjector::TYPE_LOCATOR => \eve\inject\resolve\HostResolver::class,
 				IInjector::TYPE_ARGUMENT => \eve\inject\resolve\ArgumentResolver::class,
 				IInjector::TYPE_FACTORY => \eve\inject\resolve\FactoryResolver::class
 			],
-			'providers' => [],
-			'keyEncoderName' => \eve\inject\cache\KeyEncoder::class,
-			'instanceCacheName' => \eve\common\access\TraversableMutator::class
+			'providers' => []
 		];
 	}
 
 
-	protected function _produceAccessorFactory(ICoreFactory $core, array $config) : ISimpleFactory {
-		return array_key_exists('accessorFactory', $config) ?
-			$config['accessorFactory'] :
-			$core->newInstance($config['accessorFactoryName'], [ $core ]);
+	protected function _produceAccessorFactory(ICoreFactory $base, array $config) : ISimpleFactory {
+		return $base->newInstance(TraversableAccessorFactory::class);
 	}
 
-
-	protected function _produceDriver(ICoreFactory $core, ITraversableAccessor $config, array& $dependencies) : IInjectorDriver {
-		return $core->newInstance($config->getItem('driverName'), [ & $dependencies ]);
+	protected function _produceDriver(ICoreFactory $base, ITraversableAccessor $config, array& $dependencies) : IInjectorDriver {
+		return $base->newInstance(InjectorDriver::class, [ & $dependencies ]);
 	}
-
 
 	protected function _produceKeyEncoder(IInjectorDriver $driver, ITraversableAccessor $config) : IKeyEncoder {
-		return $config->hasKey('keyEncoder') ?
-			$config->getItem('keyEncoder') :
-			$driver
-			->getCoreFactory()
-			->newInstance($config->getItem('keyEncoderName'), [ $driver->getCoreFactory() ]);
+		$base = $driver->getCoreFactory();
+
+		return $base->newInstance(KeyEncoder::class, [ $base ]);
 	}
 
 	protected function _produceInstanceCache(IInjectorDriver $driver, ITraversableAccessor $config) : IItemMutator {
-		return $config->hasKey('instanceCache') ?
-			$config->getItem('instanceCache') :
-			$driver
-				->getCoreFactory()
-				->newInstance($config->getItem('instanceCacheName'), [ [] ]);
+		return $driver->getCoreFactory()->newInstance(TraversableMutator::class, [ [] ]);
 	}
 
 	protected function _produceEntityParser(IInjectorDriver $driver, ITraversableAccessor $config) : IEntityParser {
-		return $config->hasKey('entityParser') ?
-			$config->getItem('entityParser') :
-			$driver
-				->getCoreFactory()
-				->newInstance($config->getItem('entityParserName'));
+		return $driver->getCoreFactory()->newInstance(EntityParser::class);
 	}
 
 	protected function _produceInjector(IInjectorDriver $driver, ITraversableAccessor $config) : IInjector {
-		return $config->hasKey('injector') ?
-			$config->getItem('injector') :
-			$driver
-				->getCoreFactory()
-				->newInstance($config->getItem('injectorName'), [
-					$driver,
-					$config->getItem('resolvers')
-				]);
+		return $driver->getCoreFactory()->newInstance(IdentityInjector::class, [
+			$driver,
+			$config->getItem('resolvers')
+		]);
 	}
 
 	protected function _produceLocator(IInjectorDriver $driver, ITraversableAccessor $config) : ILocator {
-		return $config->hasKey('locator') ?
-			$config->getItem('locator') :
-			$driver
-				->getInjector()
-				->produce($config->getItem('locatorName'), [
-					'driver' => $driver,
-					'providerNames' => $config->getItem('providers')
-				]);
+		return $driver->getInjector()->produce(ProviderProvider::class, [
+			'driver' => $driver,
+			'providerNames' => $config->getItem('providers')
+		]);
 	}
 
 
-	protected function _produceInstance(ICoreFactory $core, array $config) {
-		$access = $this->_produceAccessorFactory($core, $config);
+	protected function _produceInstance(ICoreFactory $base, array $config) {
+		$access = $this->_produceAccessorFactory($base, $config);
 
 		$deps = [
-			IInjectorDriver::ITEM_CORE_FACTORY => $core,
+			IInjectorDriver::ITEM_CORE_FACTORY => $base,
 			IInjectorDriver::ITEM_ACCESSOR_FACTORY => $access
 		];
 
 		$data = $access->produce($config);
-		$driver = $this->_produceDriver($core, $data, $deps);
+		$driver = $this->_produceDriver($base, $data, $deps);
 
 		$deps[IInjectorDriver::ITEM_KEY_ENCODER] = $this->_produceKeyEncoder($driver, $data);
 		$deps[IInjectorDriver::ITEM_INSTANCE_CACHE] = $this->_produceInstanceCache($driver, $data);
