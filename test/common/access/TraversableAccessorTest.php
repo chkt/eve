@@ -5,7 +5,7 @@ namespace test\access;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\IGenerateable;
-use eve\common\IProjectable;
+use eve\common\projection\IProjectable;
 use eve\common\access\ItemAccessor;
 use eve\common\access\TraversableAccessor;
 

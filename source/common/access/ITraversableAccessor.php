@@ -3,7 +3,7 @@
 namespace eve\common\access;
 
 use eve\common\IGenerateable;
-use eve\common\IProjectable;
+use eve\common\projection\IProjectable;
 
 
 
