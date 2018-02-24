@@ -7,5 +7,5 @@ namespace eve\common\projection;
 interface IProjectable
 {
 
-	public function getProjection(array $selector = null) : array;
+	public function getProjection() : array;
 }
