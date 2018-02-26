@@ -2,24 +2,15 @@
 
 namespace eve\common\access;
 
+use eve\common\access\exception\AAccessorException;
+
 
 
 final class AccessorException
-extends \Exception
-implements IAccessorException
+extends AAccessorException
 {
 
-	private $_key;
-
-
-	public function __construct(string $key) {
-		parent::__construct(sprintf('ACC invalid key "%s"', $key));
-
-		$this->_key = $key;
-	}
-
-
-	public function getKey() : string {
-		return $this->_key;
+	public function _produceMessage() : string {
+		return 'ACC invalid key "%s"';
 	}
 }
