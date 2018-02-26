@@ -6,18 +6,13 @@ use PHPUnit\Framework\TestCase;
 
 use eve\common\IHost;
 use eve\common\IDriver;
-use eve\common\factory\ISimpleFactory;
-use eve\common\factory\ICoreFactory;
 use eve\common\access\IItemAccessor;
-use eve\common\access\IItemMutator;
-use eve\common\access\ItemAccessor;
-use eve\entity\IEntityParser;
+use eve\common\access\AccessorException;
+use eve\common\assembly\IAssemblyHost;
 use eve\driver\IInjectorHost;
 use eve\driver\IInjectorDriver;
+use eve\driver\InjectorDriverAssembly;
 use eve\driver\InjectorDriver;
-use eve\inject\IInjector;
-use eve\inject\cache\IKeyEncoder;
-use eve\provide\ILocator;
 
 
 
@@ -25,82 +20,131 @@ final class InjectorDriverTest
 extends TestCase
 {
 
-	private function _produceDriver(array& $deps = []) : InjectorDriver {
-		return new InjectorDriver($deps);
+	private function _mockAssembly() {
+		$assembly = $this
+			->getMockBuilder(IAssemblyHost::class)
+			->getMock();
+
+		$assembly
+			->method('getItem')
+			->with($this->isType('string'))
+			->willReturnCallback(function($key) {
+				$map = [
+					'coreFactory' => \eve\common\factory\ICoreFactory::class,
+					'accessorFactory' => \eve\common\factory\ISimpleFactory::class,
+					'keyEncoder' => \eve\inject\cache\IKeyEncoder::class,
+					'instanceCache' => \eve\common\access\IItemMutator::class,
+					'injector' => \eve\inject\IInjector::class,
+					'entityParser' => \eve\entity\IEntityParser::class,
+					'locator' => \eve\provide\ILocator::class
+				];
+
+				$this->assertArrayHasKey($key, $map);
+
+				return $this
+					->getMockBuilder($map[$key])
+					->getMock();
+			});
+
+		return $assembly;
+	}
+
+
+	private function _produceDriver(InjectorDriverAssembly $assembly = null) : InjectorDriver {
+		if (is_null($assembly)) $assembly = $this->_mockAssembly();
+
+		return new InjectorDriver($assembly);
 	}
 
 
 	public function testInheritance() {
 		$driver = $this->_produceDriver();
 
-		$this->assertInstanceOf(ItemAccessor::class, $driver);
 		$this->assertInstanceOf(IInjectorDriver::class, $driver);
 		$this->assertInstanceOf(IDriver::class, $driver);
 		$this->assertInstanceOf(IInjectorHost::class, $driver);
 		$this->assertInstanceOf(IHost::class, $driver);
+		$this->assertInstanceOf(IItemAccessor::class, $driver);
+	}
+
+
+	public function testHasKey() {
+		$driver = $this->_produceDriver();
+
+		$this->assertTrue($driver->hasKey($driver::ITEM_CORE_FACTORY));
+		$this->assertTrue($driver->hasKey($driver::ITEM_ACCESSOR_FACTORY));
+		$this->assertTrue($driver->hasKey($driver::ITEM_KEY_ENCODER));
+		$this->assertTrue($driver->hasKey($driver::ITEM_INSTANCE_CACHE));
+		$this->assertTrue($driver->hasKey($driver::ITEM_INJECTOR));
+		$this->assertTrue($driver->hasKey($driver::ITEM_ENTITY_PARSER));
+		$this->assertTrue($driver->hasKey($driver::ITEM_LOCATOR));
+		$this->assertFalse($driver->hasKey('foo'));
+		$this->assertFalse($driver->hasKey('resolverAssembly'));
+		$this->assertFalse($driver->hasKey('providerAssembly'));
+	}
+
+
+	public function testGetItem() {
+		$driver = $this->_produceDriver();
+
+		$this->assertInstanceOf(\eve\common\factory\ICoreFactory::class, $driver->getItem($driver::ITEM_CORE_FACTORY));
+		$this->assertInstanceOf(\eve\common\factory\ISimpleFactory::class, $driver->getItem($driver::ITEM_ACCESSOR_FACTORY));
+		$this->assertInstanceOf(\eve\inject\cache\IKeyEncoder::class, $driver->getItem($driver::ITEM_KEY_ENCODER));
+		$this->assertInstanceOf(\eve\common\access\IItemMutator::class, $driver->getItem($driver::ITEM_INSTANCE_CACHE));
+		$this->assertInstanceOf(\eve\inject\IInjector::class, $driver->getItem($driver::ITEM_INJECTOR));
+		$this->assertInstanceOf(\eve\entity\IEntityParser::class, $driver->getItem($driver::ITEM_ENTITY_PARSER));
+		$this->assertInstanceOf(\eve\provide\ILocator::class, $driver->getItem($driver::ITEM_LOCATOR));
+	}
+
+	public function testGetItem_invalidKey() {
+		$driver = $this->_produceDriver();
+
+		$this->expectException(AccessorException::class);
+		$this->expectExceptionMessage('ACC invalid key "foo"');
+
+		$driver->getItem('foo');
 	}
 
 
 	public function testGetInjector() {
-		$injector = $this->getMockBuilder(IInjector::class)->getMock();
-		$deps = [ 'injector' => $injector ];
+		$driver = $this->_produceDriver();
 
-		$driver = $this->_produceDriver($deps);
-
-		$this->assertSame($injector, $driver->getInjector());
+		$this->assertInstanceOf(\eve\inject\IInjector::class, $driver->getInjector());
 	}
 
 	public function testGetLocator() {
-		$locator = $this->getMockBuilder(ILocator::class)->getMock();
-		$deps = [ 'locator' => $locator ];
+		$driver = $this->_produceDriver();
 
-		$driver = $this->_produceDriver($deps);
-
-		$this->assertSame($locator, $driver->getLocator());
+		$this->assertInstanceOf(\eve\provide\ILocator::class, $driver->getLocator());
 	}
 
 	public function testGetEntityParser() {
-		$parser = $this->getMockBuilder(IEntityParser::class)->getMock();
-		$deps = [ 'entityParser' => $parser];
+		$driver = $this->_produceDriver();
 
-		$driver = $this->_produceDriver($deps);
-
-		$this->assertSame($parser, $driver->getEntityParser());
+		$this->assertInstanceOf(\eve\entity\IEntityParser::class, $driver->getEntityParser());
 	}
 
-	public function testGetFactory() {
-		$fab = $this->getMockBuilder(ICoreFactory::class)->getMock();
-		$deps = [ 'coreFactory' => $fab ];
+	public function testGetBaseFactory() {
+		$driver = $this->_produceDriver();
 
-		$driver = $this->_produceDriver($deps);
-
-		$this->assertSame($fab, $driver->getCoreFactory());
+		$this->assertInstanceOf(\eve\common\factory\ICoreFactory::class, $driver->getCoreFactory());
 	}
 
 	public function testGetAccessorFactory() {
-		$fab = $this->getMockBuilder(ISimpleFactory::class)->getMock();
-		$deps = [ 'accessorFactory' => $fab];
+		$driver = $this->_produceDriver();
 
-		$driver = $this->_produceDriver($deps);
-
-		$this->assertSame($fab, $driver->getAccessorFactory());
+		$this->assertInstanceOf(\eve\common\factory\ISimpleFactory::class, $driver->getAccessorFactory());
 	}
 
 	public function testGetKeyEncoder() {
-		$encoder = $this->getMockBuilder(IKeyEncoder::class)->getMock();
-		$deps = [ 'keyEncoder' => $encoder ];
+		$driver = $this->_produceDriver();
 
-		$driver = $this->_produceDriver($deps);
-
-		$this->assertSame($encoder , $driver->getKeyEncoder());
+		$this->assertInstanceOf(\eve\inject\cache\IKeyEncoder::class, $driver->getKeyEncoder());
 	}
 
 	public function testGetInstanceCache() {
-		$cache = $this->getMockBuilder(IItemMutator::class)->getMock();
-		$deps = [ 'instanceCache' => $cache ];
+		$driver = $this->_produceDriver();
 
-		$driver = $this->_produceDriver($deps);
-
-		$this->assertSame($cache, $driver->getInstanceCache());
+		$this->assertInstanceOf(\eve\common\access\IItemMutator::class, $driver->getInstanceCache());
 	}
 }
