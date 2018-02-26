@@ -8,7 +8,7 @@ use eve\common\IFactory;
 use eve\common\factory\IAccessorFactory;
 use eve\common\access\IAccessorException;
 use eve\common\access\TraversableAccessor;
-use eve\driver\IInjectorDriver;
+use eve\common\assembly\IAssemblyHost;
 use eve\inject\IInjectable;
 use eve\inject\IInjector;
 use eve\inject\resolve\IInjectorResolver;
@@ -37,17 +37,16 @@ extends TestCase
 		return $ins;
 	}
 
-	private function _mockDriver(ILocator $locator = null) : IInjectorDriver {
+	private function _mockDriverAssembly(ILocator $locator = null) : IAssemblyHost {
 		if (is_null($locator)) $locator = $this->_mockLocator();
 
 		$ins = $this
-			->getMockBuilder(IInjectorDriver::class)
+			->getMockBuilder(IAssemblyHost::class)
 			->getMock();
 
 		$ins
-			->expects($this->once())
-			->method('getLocator')
-			->with()
+			->method('getItem')
+			->with($this->equalTo('locator'))
 			->willReturn($locator);
 
 		return $ins;
@@ -66,7 +65,7 @@ extends TestCase
 
 	public function testDependencyConfig() {
 		$locator = $this->_mockLocator();
-		$driver = $this->_mockDriver($locator);
+		$driver = $this->_mockDriverAssembly($locator);
 
 		$this->assertEquals([[
 			'type' => IInjector::TYPE_ARGUMENT,
