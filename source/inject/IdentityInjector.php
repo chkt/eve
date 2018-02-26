@@ -2,7 +2,7 @@
 
 namespace eve\inject;
 
-use eve\driver\IInjectorDriver;
+use eve\common\assembly\IAssemblyHost;
 
 
 
@@ -17,13 +17,13 @@ extends Injector
 
 
 
-	public function __construct(IInjectorDriver $driver, array $resolverNames) {
-		parent::__construct($driver, $resolverNames);
+	public function __construct(IAssemblyHost $driverAssembly) {
+		parent::__construct($driverAssembly);
 
-		$this->_fab = $driver->getCoreFactory();
-		$this->_access = $driver->getAccessorFactory();
-		$this->_encoder = $driver->getKeyEncoder();
-		$this->_cache = $driver->getInstanceCache();
+		$this->_fab = $driverAssembly->getItem('coreFactory');
+		$this->_access = $driverAssembly->getItem('accessorFactory');
+		$this->_encoder = $driverAssembly->getItem('keyEncoder');
+		$this->_cache = $driverAssembly->getItem('instanceCache');
 	}
 
 
