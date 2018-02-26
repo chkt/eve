@@ -15,7 +15,9 @@ implements IInjectorResolver
 	static public function getDependencyConfig(ITraversableAccessor $config) : array {
 		return [[
 			'type' => IInjector::TYPE_ARGUMENT,
-			'data' => $config->getItem('driver')->getInjector()
+			'data' => $config
+				->getItem('driver')
+				->getItem('injector')
 		]];
 	}
 
