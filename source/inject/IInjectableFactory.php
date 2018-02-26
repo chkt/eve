@@ -2,12 +2,12 @@
 
 namespace eve\inject;
 
-use eve\common\factory\IProviderFactory;
+use eve\common\factory\IAccessorFactory;
 
 
 
 interface IInjectableFactory
-extends IProviderFactory, IInjectableIdentity
+extends IAccessorFactory, IInjectableIdentity
 {
 
 }
