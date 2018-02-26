@@ -8,9 +8,10 @@ use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ICoreFactory;
 use eve\common\access\ITraversableAccessor;
 use eve\common\access\TraversableAccessor;
+use eve\common\assembly\IAssemblyHost;
+use eve\common\assembly\exception\InvalidKeyException;
 use eve\entity\IEntityParser;
 use eve\entity\EntityParser;
-use eve\driver\IInjectorDriver;
 use eve\inject\IInjector;
 use eve\inject\IInjectable;
 use eve\inject\Injector;
@@ -59,20 +60,8 @@ extends TestCase
 	private function _mockResolver() : IInjectorResolver {
 		$ins = $this
 			->getMockBuilder(IInjectorResolver::class)
-			->setMethods([ 'construct', 'getDependencyConfigMember', 'produce' ])
+			->setMethods([ 'produce' ])
 			->getMockForAbstractClass();
-
-		$ins
-			->expects($this->once())
-			->method('construct')
-			->with()
-			->willReturn($ins);
-
-		$ins
-			->expects($this->once())
-			->method('getDependencyConfigMember')
-			->with($this->isInstanceOf(ITraversableAccessor::class))
-			->willReturn([]);
 
 		$ins
 			->expects($this->once())
@@ -83,6 +72,23 @@ extends TestCase
 			});
 
 		return $ins;
+	}
+
+	private function _mockResolvers(array $map = []) {
+		$assembly = $this
+			->getMockBuilder(IAssemblyHost::class)
+			->getMock();
+
+		$assembly
+			->method('getItem')
+			->with($this->isType('string'))
+			->willReturnCallback(function(string $key) use ($map) {
+				if (!array_key_exists($key, $map)) throw new InvalidKeyException($key);
+
+				return $map[$key];
+			});
+
+		return $assembly;
 	}
 
 
@@ -136,32 +142,31 @@ extends TestCase
 		return $ins;
 	}
 
-	private function _mockDriver(ICoreFactory $factory = null, IEntityParser $parser = null, ISimpleFactory $accessor = null) : IInjectorDriver {
+	private function _mockDriverAssembly(
+		ICoreFactory $factory = null,
+		IEntityParser $parser = null,
+		ISimpleFactory $accessor = null,
+		IAssemblyHost $resolvers = null
+	) : IAssemblyHost {
 		if(is_null($factory)) $factory = $this->_mockFactory();
 		if (is_null($parser)) $parser = $this->_produceParser();
 		if (is_null($accessor)) $accessor = $this->_mockAccessorFactory();
+		if (is_null($resolvers)) $resolvers = $this->_mockResolvers();
 
 		$ins = $this
-			->getMockBuilder(IInjectorDriver::class)
+			->getMockBuilder(IAssemblyHost::class)
 			->getMock();
 
 		$ins
-			->expects($this->once())
-			->method('getCoreFactory')
-			->with()
-			->willReturn($factory);
-
-		$ins
-			->expects($this->once())
-			->method('getEntityParser')
-			->with()
-			->willReturn($parser);
-
-		$ins
-			->expects($this->once())
-			->method('getAccessorFactory')
-			->with()
-			->willReturn($accessor);
+			->method('getItem')
+			->with($this->isType('string'))
+			->willReturnCallback(function(string $key) use ($factory, $parser, $accessor, $resolvers) {
+				if ($key === 'coreFactory') return $factory;
+				else if ($key === 'accessorFactory') return $accessor;
+				else if ($key === 'entityParser') return $parser;
+				else if ($key === 'resolverAssembly') return $resolvers;
+				else $this->fail($key);
+			});
 
 		return $ins;
 	}
@@ -171,10 +176,10 @@ extends TestCase
 		return new EntityParser();
 	}
 
-	private function _produceInjector(IInjectorDriver $driver = null, array $resolverNames = []) {
-		if (is_null($driver)) $driver = $this->_mockDriver();
+	private function _produceInjector(IAssemblyHost $driverAssembly = null) {
+		if (is_null($driverAssembly)) $driverAssembly = $this->_mockDriverAssembly();
 
-		return new Injector($driver, $resolverNames);
+		return new Injector($driverAssembly);
 	}
 
 
@@ -184,11 +189,13 @@ extends TestCase
 		$this->assertInstanceOf(IInjector::class, $injector);
 	}
 
-	public function testProduce_noDeps() {
+
+	public function testProduce_noDependencies() {
 		$factory = $this->_mockFactory([
 			'foo' => $this->_mockInjectable()
 		]);
-		$driver = $this->_mockDriver($factory);
+
+		$driver = $this->_mockDriverAssembly($factory);
 		$injector = $this->_produceInjector($driver);
 
 		$injectable = $injector->produce('foo', []);
@@ -198,14 +205,11 @@ extends TestCase
 	}
 
 	public function testProduce() {
-		$factory = $this->_mockFactory([
-			'injectable' => $this->_mockInjectable(),
-			'resolver' => $this->_mockResolver()
-		]);
-		$driver = $this->_mockDriver($factory);
-		$injector = $this->_produceInjector($driver, [
-			'foo' => 'resolver'
-		]);
+		$resolvers = $this->_mockResolvers([ 'foo' => $this->_mockResolver() ]);
+		$factory = $this->_mockFactory([ 'injectable' => $this->_mockInjectable() ]);
+
+		$driver = $this->_mockDriverAssembly($factory, null, null, $resolvers);
+		$injector = $this->_produceInjector($driver);
 
 		$injectable = $injector->produce('injectable', [[
 			'type' => 'foo',
@@ -215,14 +219,11 @@ extends TestCase
 	}
 
 	public function testProduce_entity() {
-		$factory = $this->_mockFactory([
-			'injectable' => $this->_mockInjectable(),
-			'resolver' => $this->_mockResolver()
-		]);
-		$driver = $this->_mockDriver($factory);
-		$injector = $this->_produceInjector($driver, [
-			'foo' => 'resolver'
-		]);
+		$resolvers = $this->_mockResolvers([ 'foo' => $this->_mockResolver() ]);
+		$factory = $this->_mockFactory([ 'injectable' => $this->_mockInjectable() ]);
+
+		$driver = $this->_mockDriverAssembly($factory, null, null, $resolvers);
+		$injector = $this->_produceInjector($driver);
 
 		$injectable = $injector->produce('injectable', [
 			'foo:'
@@ -246,7 +247,7 @@ extends TestCase
 		$factory = $this->_mockFactory([
 			'injectable' => $this->_mockInjectable()
 		]);
-		$driver = $this->_mockDriver($factory);
+		$driver = $this->_mockDriverAssembly($factory);
 		$injector = $this->_produceInjector($driver);
 
 		$this->expectException(\ErrorException::class);
@@ -259,7 +260,7 @@ extends TestCase
 		$factory = $this->_mockFactory([
 			'injectable' => $this->_mockInjectable()
 		]);
-		$driver = $this->_mockDriver($factory);
+		$driver = $this->_mockDriverAssembly($factory);
 		$injector = $this->_produceInjector($driver);
 
 		$this->expectException(\ErrorException::class);
@@ -272,11 +273,11 @@ extends TestCase
 		$factory = $this->_mockFactory([
 			'injectable' => $this->_mockInjectable()
 		]);
-		$driver = $this->_mockDriver($factory);
+		$driver = $this->_mockDriverAssembly($factory);
 		$injector = $this->_produceInjector($driver);
 
-		$this->expectException(\ErrorException::class);
-		$this->expectExceptionMessage('INJ unknown dependency "foo"');
+		$this->expectException(InvalidKeyException::class);
+		$this->expectExceptionMessage('ASM invalid key "foo"');
 
 		$injector->produce('injectable', [[
 			'type' => 'foo'
