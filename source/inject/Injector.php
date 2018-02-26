@@ -3,8 +3,7 @@
 namespace eve\inject;
 
 use eve\common\access\IItemAccessor;
-use eve\driver\IInjectorDriver;
-use eve\inject\resolve\IInjectorResolver;
+use eve\common\assembly\IAssemblyHost;
 
 
 
@@ -12,36 +11,19 @@ class Injector
 implements IInjector
 {
 
-	private $_driver;
+	private $_baseFactory;
+	private $_accessorFactory;
 
-	private $_fab;
 	private $_parser;
-	private $_access;
-
-	private $_resolverNames;
 	private $_resolvers;
 
 
-	public function __construct(IInjectorDriver $driver, array $resolverNames) {
-		$this->_driver = $driver;
+	public function __construct(IAssemblyHost $driverAssembly) {
+		$this->_baseFactory = $driverAssembly->getItem('coreFactory');
+		$this->_accessorFactory = $driverAssembly->getItem('accessorFactory');		//TODO: can we use a single instance?
 
-		$this->_fab = $driver->getCoreFactory();
-		$this->_parser = $driver->getEntityParser();
-		$this->_access = $driver->getAccessorFactory();		//TODO: can we use a single instance?
-
-		$this->_resolverNames = $resolverNames;
-		$this->_resolvers = [];
-	}
-
-
-	private function _getResolver(string $type) : IInjectorResolver {
-		if (!array_key_exists($type, $this->_resolvers)) {
-			if (!array_key_exists($type, $this->_resolverNames)) throw new \ErrorException(sprintf('INJ unknown dependency "%s"', $type));
-
-			$this->_resolvers[$type] = $this->produce($this->_resolverNames[$type], [ 'driver' => $this->_driver ]);
-		}
-
-		return $this->_resolvers[$type];
+		$this->_parser = $driverAssembly->getItem('entityParser');
+		$this->_resolvers = $driverAssembly->getItem('resolverAssembly');
 	}
 
 
@@ -56,9 +38,9 @@ implements IInjector
 
 			$type = $dep['type'];
 
-			$res[] = $this
-				->_getResolver($type)
-				->produce($this->_access->produce($dep));
+			$res[] = $this->_resolvers
+				->getItem($type)
+				->produce($this->_accessorFactory->produce($dep));
 		}
 
 		return $res;
@@ -66,18 +48,18 @@ implements IInjector
 
 
 	protected function _produceInstance(string $qname, IItemAccessor $access) {
-		$fab = $this->_fab;
+		$base = $this->_baseFactory;
 
-		$deps = $fab->callMethod($qname, 'getDependencyConfig', [ $access ]);
+		$deps = $base->callMethod($qname, 'getDependencyConfig', [ $access ]);
 		$args = $this->_resolveDependencies($deps);
 
-		return $fab->newInstance($qname, $args);
+		return $base->newInstance($qname, $args);
 	}
 
 
 	public function produce(string $qname, array $config = []) {		//TODO: prevent dependency loops?
-		if (!$this->_fab->hasInterface($qname, IInjectable::class)) throw new \ErrorException(sprintf('INJ not injectable "%s"', $qname));
+		if (!$this->_baseFactory->hasInterface($qname, IInjectable::class)) throw new \ErrorException(sprintf('INJ not injectable "%s"', $qname));
 
-		return $this->_produceInstance($qname, $this->_access->produce($config));
+		return $this->_produceInstance($qname, $this->_accessorFactory->produce($config));
 	}
 }
