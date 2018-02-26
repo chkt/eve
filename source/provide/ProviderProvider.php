@@ -3,7 +3,7 @@
 namespace eve\provide;
 
 use eve\common\access\ITraversableAccessor;
-use eve\driver\IInjectorDriver;
+use eve\common\assembly\IAssemblyHost;
 use eve\inject\IInjector;
 
 
@@ -24,49 +24,30 @@ implements ILocator
 
 
 
-	private $_driver;
-
-	private $_injector;
 	private $_parser;
-
-	private $_providerNames;
 	private $_providers;
 
 
-	public function __construct(IInjectorDriver $driver, array $providerNames) {
-		$this->_driver = $driver;
-		$this->_injector = $driver->getInjector();
-		$this->_parser = $driver->getEntityParser();
-
-		$this->_providerNames = $providerNames;
-		$this->_providers = [];
+	public function __construct(IAssemblyHost $driver) {
+		$this->_parser = $driver->getItem('entityParser');
+		$this->_providers = $driver->getItem('providerAssembly');
 	}
 
 
 	public function hasKey(string $key) : bool {
-		return array_key_exists($key, $this->_providerNames);
+		return $this->_providers->hasKey($key);
 	}
 
 
 	public function getItem(string $key) {
-		if (!array_key_exists($key, $this->_providers)) {
-			if (!array_key_exists($key, $this->_providerNames)) throw new \ErrorException(sprintf('LOC unknown provider "%s"', $key));
-
-			$provider = $this->_injector->produce($this->_providerNames[$key], ['driver' => $this->_driver]);
-
-			if (!($provider instanceof IProvider)) throw new \ErrorException(sprintf('LOC not a provider "%s"', $key));
-
-			$this->_providers[$key] = $provider;
-		}
-
-		return $this->_providers[$key];
+		return $this->_providers->getItem($key);
 	}
 
 
 	public function locate(string $entity) {
 		$config = $this->_parser->parse($entity);
 
-		return $this
+		return $this->_providers
 			->getItem($config['type'])
 			->getItem($config['location']);
 	}
