@@ -4,7 +4,7 @@ namespace test\common\access;
 
 use PHPUnit\Framework\TestCase;
 
-use eve\common\access\IAccessorException;
+use eve\common\access\exception\AAccessorException;
 use eve\common\access\AccessorException;
 
 
@@ -21,7 +21,7 @@ extends TestCase
 	public function testInheritance() {
 		$ins = $this->_produceException();
 
-		$this->assertInstanceOf(IAccessorException::class, $ins);
+		$this->assertInstanceOf(AAccessorException::class, $ins);
 	}
 
 
@@ -29,11 +29,5 @@ extends TestCase
 		$ins = $this->_produceException('foo');
 
 		$this->assertEquals('ACC invalid key "foo"', $ins->getMessage());
-	}
-
-	public function testGetKey() {
-		$ins = $this->_produceException('foo');
-
-		$this->assertEquals('foo', $ins->getKey());
 	}
 }
