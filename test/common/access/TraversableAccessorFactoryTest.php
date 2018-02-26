@@ -9,6 +9,7 @@ use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ICoreFactory;
 use eve\common\access\TraversableAccessorFactory;
 use eve\common\access\TraversableAccessor;
+use eve\common\access\operator\AItemAccessorComposition;
 
 
 
@@ -42,8 +43,7 @@ extends TestCase
 	public function testInheritance() {
 		$fab = $this->_produceAccessorFactory();
 
-		$this->assertInstanceOf(ISimpleFactory::class, $fab);
-		$this->assertInstanceOf(IFactory::class, $fab);
+		$this->assertInstanceOf(AItemAccessorComposition::class, $fab);
 	}
 
 	public function testProduce() {
