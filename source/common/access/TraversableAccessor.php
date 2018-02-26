@@ -2,6 +2,8 @@
 
 namespace eve\common\access;
 
+use eve\common\projection\IProjectable;
+
 
 
 class TraversableAccessor
@@ -9,10 +11,8 @@ extends ItemAccessor
 implements ITraversableAccessor
 {
 
-	public function isEqual(ITraversableAccessor $b) : bool {
-		$data = $b instanceof ItemAccessor ? $b->_useData() : $b->getProjection();
-
-		return $this->_useData() === $data;
+	public function isEqual(IProjectable $b) : bool {
+		return $this->_useData() === $b->getProjection();
 	}
 
 
@@ -21,7 +21,7 @@ implements ITraversableAccessor
 	}
 
 
-	public function getProjection(array $selector = null) : array {
+	public function getProjection() : array {
 		return $this->_useData();
 	}
 }
