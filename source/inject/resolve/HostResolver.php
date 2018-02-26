@@ -2,6 +2,7 @@
 
 namespace eve\inject\resolve;
 
+use eve\common\IHost;
 use eve\common\access\ITraversableAccessor;
 use eve\driver\IInjectorHost;
 use eve\inject\IInjector;
@@ -24,7 +25,7 @@ implements IInjectorResolver
 	private $_host;
 
 
-	public function __construct(IInjectorHost $host) {
+	public function __construct(IHost $host) {
 		$this->_host = $host;
 	}
 
