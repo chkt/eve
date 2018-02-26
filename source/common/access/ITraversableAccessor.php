@@ -3,13 +3,12 @@
 namespace eve\common\access;
 
 use eve\common\IGenerateable;
-use eve\common\projection\IProjectable;
+use eve\common\projection\ICompactProjectable;
 
 
 
 interface ITraversableAccessor
-extends IItemAccessor, IGenerateable, IProjectable
+extends IItemAccessor, IGenerateable, ICompactProjectable
 {
 
-	public function isEqual(ITraversableAccessor $b) : bool;
 }
