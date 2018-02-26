@@ -9,18 +9,32 @@ use eve\common\factory\ICoreFactory;
 use eve\common\access\IItemMutator;
 use eve\common\access\TraversableAccessor;
 use eve\common\access\TraversableMutator;
+use eve\common\assembly\IAssemblyHost;
 use eve\inject\IInjectable;
 use eve\inject\IInjectableIdentity;
 use eve\inject\Injector;
 use eve\inject\IdentityInjector;
 use eve\inject\cache\IKeyEncoder;
-use eve\driver\IInjectorDriver;
 
 
 
 final class IdentityInjectorTest
 extends TestCase
 {
+
+	private function _mockInterface(string $qname, array $args = []) {
+		$ins = $this
+			->getMockBuilder($qname)
+			->getMock();
+
+		foreach ($args as $key => & $arg) {
+			$prop = (is_numeric($key) ? 'p' : '') . $key;
+
+			$ins->$prop =& $arg;
+		}
+
+		return $ins;
+	}
 
 	private function _mockFactory() : ICoreFactory {
 		$ins = $this
@@ -117,7 +131,7 @@ extends TestCase
 		return $ins;
 }
 
-	private function _mockDriver(IKeyEncoder $encoder = null, IItemMutator $cache = null) : IInjectorDriver {
+	private function _mockDriverAssembly(IKeyEncoder $encoder = null, IItemMutator $cache = null) : IAssemblyHost {
 		$factory = $this->_mockFactory();
 		$accessor = $this->_mockAccessorFactory();
 
@@ -125,31 +139,21 @@ extends TestCase
 		if (is_null($cache)) $cache = $this->_produceCache();
 
 		$ins = $this
-			->getMockBuilder(IInjectorDriver::class)
+			->getMockBuilder(IAssemblyHost::class)
 			->getMock();
 
 		$ins
-			->expects($this->exactly(2))
-			->method('getCoreFactory')
-			->with()
-			->willReturn($factory);
-
-		$ins
-			->expects($this->exactly(2))
-			->method('getAccessorFactory')
-			->with()
-			->willReturn($accessor);
-
-		$ins
-			->expects($this->once())
-			->method('getKeyEncoder')
-			->willReturn($encoder);
-
-		$ins
-			->expects($this->once())
-			->method('getInstanceCache')
-			->with()
-			->willReturn($cache);
+			->method('getItem')
+			->with($this->isType('string'))
+			->willReturnCallback(function(string $key) use ($factory, $accessor, $encoder, $cache) {
+				if ($key === 'coreFactory') return $factory;
+				else if ($key === 'accessorFactory') return $accessor;
+				else if ($key === 'keyEncoder') return $encoder;
+				else if ($key === 'instanceCache') return $cache;
+				else if ($key === 'entityParser') return $this->_mockInterface(\eve\entity\IEntityParser::class);
+				else if ($key === 'resolverAssembly') return $this->_mockInterface(\eve\common\assembly\IAssemblyHost::class);
+				else $this->fail($key);
+			});
 
 		return $ins;
 	}
@@ -162,8 +166,8 @@ extends TestCase
 	}
 
 
-	private function _produceInjector(IInjectorDriver $driver = null) {
-		if (is_null($driver)) $driver = $this->_mockDriver();
+	private function _produceInjector(IAssemblyHost $driver = null) {
+		if (is_null($driver)) $driver = $this->_mockDriverAssembly();
 
 		return new IdentityInjector($driver, []);
 	}
@@ -178,7 +182,7 @@ extends TestCase
 	public function testProduce() {
 		$encoder = $this->_mockKeyEncoder();
 		$cache = $this->_produceCache();
-		$driver = $this->_mockDriver($encoder, $cache);
+		$driver = $this->_mockDriverAssembly($encoder, $cache);
 		$injector = $this->_produceInjector($driver);
 
 		$a =  $injector->produce(IInjectableIdentity::class, [
@@ -211,7 +215,7 @@ extends TestCase
 	public function testProduce_noIdentity() {
 		$encoder = $this->_mockKeyEncoder();
 		$cache = $this->_produceCache();
-		$driver = $this->_mockDriver($encoder, $cache);
+		$driver = $this->_mockDriverAssembly($encoder, $cache);
 		$injector = $this->_produceInjector($driver);
 
 		$a = $injector->produce(IInjectable::class, [
