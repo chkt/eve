@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 use eve\common\IGenerateable;
 use eve\common\projection\IProjectable;
+use eve\common\projection\ICompactProjectable;
 use eve\common\access\ItemAccessor;
 use eve\common\access\TraversableAccessor;
 
@@ -14,6 +15,21 @@ use eve\common\access\TraversableAccessor;
 final class TraversableAccessorTest
 extends TestCase
 {
+
+	private function _mockProjectable(array& $data = null) {
+		if (is_null($data)) $data = $this->_produceSampleData();
+
+		$proj = $this
+			->getMockBuilder(IProjectable::class)
+			->getMock();
+
+		$proj
+			->method('getProjection')
+			->willReturnReference($data);
+
+		return $proj;
+	}
+
 
 	private function _produceSampleData() : array {
 		return [
@@ -34,21 +50,20 @@ extends TestCase
 
 		$this->assertInstanceOf(ItemAccessor::class, $ins);
 		$this->assertInstanceOf(IGenerateable::class, $ins);
+		$this->assertInstanceOf(ICompactProjectable::class, $ins);
 		$this->assertInstanceOf(IProjectable::class, $ins);
 	}
 
 
 	public function testIsEqual() {
 		$ad = [ 'foo' => 1 ];
-		$a = $this->_produceInstance($ad);
+		$a = $this->_mockProjectable($ad);
 		$b = $this->_produceInstance();
 
-		$this->assertFalse($a->isEqual($b));
 		$this->assertFalse($b->isEqual($a));
 
 		$ad['bar'] = 2;
 
-		$this->assertTrue($a->isEqual($b));
 		$this->assertTrue($b->isEqual($a));
 	}
 
