@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use eve\common\factory\ICoreFactory;
 use eve\common\access\IItemAccessor;
 use eve\common\access\TraversableAccessor;
-use eve\driver\IInjectorDriver;
+use eve\common\assembly\IAssemblyHost;
 use eve\inject\IInjectable;
 use eve\inject\IInjector;
 use eve\provide\IProvider;
@@ -59,22 +59,19 @@ extends TestCase
 		return $ins;
 	}
 
-	private function _mockDriver(IInjector $injector, ICoreFactory $factory) : IInjectorDriver {
+	private function _mockDriverAssembly(IInjector $injector, ICoreFactory $base) : IAssemblyHost {
 		$ins = $this
-			->getMockBuilder(IInjectorDriver::class)
+			->getMockBuilder(IAssemblyHost::class)
 			->getMock();
 
 		$ins
-			->expects($this->once())
-			->method('getInjector')
-			->with()
-			->willReturn($injector);
-
-		$ins
-			->expects($this->once())
-			->method('getCoreFactory')
-			->with()
-			->willReturn($factory);
+			->method('getItem')
+			->with($this->isType('string'))
+			->willReturnCallback(function(string $key) use ($injector, $base) {
+				if ($key === 'injector') return $injector;
+				else if ($key === 'coreFactory') return $base;
+				else $this->fail();
+			});
 
 		return $ins;
 	}
@@ -118,7 +115,7 @@ extends TestCase
 	public function testDependencyConfig() {
 		$injector = $this->_mockInjector();
 		$factory = $this->_mockFactory();
-		$driver = $this->_mockDriver($injector, $factory);
+		$assembly = $this->_mockDriverAssembly($injector, $factory);
 
 		$this->assertEquals([[
 			'type' => IInjector::TYPE_ARGUMENT,
@@ -127,7 +124,7 @@ extends TestCase
 			'type' => IInjector::TYPE_ARGUMENT,
 			'data' => $factory
 		]], AProvider::getDependencyConfig($this->_produceAccessor([
-			'driver' => $driver
+			'driver' => $assembly
 		])));
 	}
 
