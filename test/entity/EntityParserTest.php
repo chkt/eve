@@ -4,6 +4,8 @@ namespace test\entity;
 
 use PHPUnit\Framework\TestCase;
 
+use eve\common\ITokenizer;
+use eve\entity\IEntityParser;
 use eve\entity\EntityParser;
 
 
@@ -14,6 +16,14 @@ extends TestCase
 
 	public function _produceInstance() {
 		return new EntityParser();
+	}
+
+
+	public function testInheritance() {
+		$ins = $this->_produceInstance();
+
+		$this->assertInstanceOf(IEntityParser::class, $ins);
+		$this->assertInstanceOf(ITokenizer::class, $ins);
 	}
 
 
