@@ -14,16 +14,14 @@ implements IProvider
 {
 
 	static public function getDependencyConfig(ITraversableAccessor $config) : array {
+		$driver = $config->getItem('driver');
+
 		return [[
 			'type' => IInjector::TYPE_ARGUMENT,
-			'data' => $config
-				->getItem('driver')
-				->getInjector()
+			'data' => $driver->getItem('injector')
 		], [
 			'type' => IInjector::TYPE_ARGUMENT,
-			'data' => $config
-				->getItem('driver')
-				->getCoreFactory()
+			'data' => $driver->getItem('coreFactory')
 		]];
 	}
 
