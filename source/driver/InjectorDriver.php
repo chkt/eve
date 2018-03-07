@@ -6,7 +6,7 @@ use eve\common\assembly\IAssemblyHost;
 use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ICoreFactory;
 use eve\common\access\IItemMutator;
-use eve\common\access\AccessorException;
+use eve\common\access\exception\AccessorException;
 use eve\inject\IInjector;
 use eve\inject\cache\IKeyEncoder;
 use eve\provide\ILocator;

@@ -2,6 +2,8 @@
 
 namespace eve\common\access;
 
+use eve\common\access\exception\AccessorException;
+
 
 
 class ItemAccessor

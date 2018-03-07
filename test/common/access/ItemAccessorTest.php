@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 use eve\common\access\IKeyAccessor;
 use eve\common\access\IItemAccessor;
-use eve\common\access\AccessorException;
+use eve\common\access\exception\IAccessorException;
 use eve\common\access\ItemAccessor;
 
 
@@ -79,7 +79,7 @@ extends TestCase
 	public function testGetItem_noKey() {
 		$ins = $this->_produceAccessor();
 
-		$this->expectException(AccessorException::class);
+		$this->expectException(IAccessorException::class);
 		$this->expectExceptionMessage(sprintf('ACC invalid key "baz"'));
 
 		$ins->getItem('baz');
@@ -92,8 +92,8 @@ extends TestCase
 		$ins
 			->expects($this->once())
 			->method('_handleAccessorException')
-			->with($this->isInstanceOf(AccessorException::class))
-			->willReturnCallback(function(AccessorException $ex) use (& $data) : bool {
+			->with($this->isInstanceOf(IAccessorException::class))
+			->willReturnCallback(function(IAccessorException $ex) use (& $data) : bool {
 				$this->assertEquals('baz', $ex->getKey());
 
 				$data['baz'] = 3;

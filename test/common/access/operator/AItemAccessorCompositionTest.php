@@ -5,7 +5,7 @@ namespace test\common\access\operator;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\projection\IProjectable;
-use eve\common\access\AccessorException;
+use eve\common\access\exception\IAccessorException;
 use eve\common\access\ITraversableAccessor;
 use eve\common\access\operator\AItemAccessorComposition;
 
@@ -65,7 +65,7 @@ extends TestCase
 		$operator = $this->_mockComposition();
 		$a = $this->_mockProjectable();
 
-		$this->expectException(AccessorException::class);
+		$this->expectException(IAccessorException::class);
 		$this->expectExceptionMessage('ACC invalid key "foo"');
 
 		$operator->select($a, 'foo');
@@ -75,7 +75,7 @@ extends TestCase
 		$operator = $this->_mockComposition();
 		$a = $this->_mockProjectable(IProjectable::class, [ 'foo' => 1 ]);
 
-		$this->expectException(AccessorException::class);
+		$this->expectException(IAccessorException::class);
 		$this->expectExceptionMessage('ACC invalid key "foo"');
 
 		$operator->select($a, 'foo');

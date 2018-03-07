@@ -1,8 +1,6 @@
 <?php
 
-namespace eve\common\access;
-
-use eve\common\access\exception\AAccessorException;
+namespace eve\common\access\exception;
 
 
 

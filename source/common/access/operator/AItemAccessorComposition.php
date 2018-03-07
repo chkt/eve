@@ -6,7 +6,7 @@ use eve\common\factory\ISimpleFactory;
 use eve\common\projection\IProjectable;
 use eve\common\projection\operator\AProjectableSurrogate;
 use eve\common\access\IItemAccessor;
-use eve\common\access\AccessorException;
+use eve\common\access\exception\AccessorException;
 
 
 

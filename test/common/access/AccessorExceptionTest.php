@@ -4,8 +4,7 @@ namespace test\common\access;
 
 use PHPUnit\Framework\TestCase;
 
-use eve\common\access\exception\AAccessorException;
-use eve\common\access\AccessorException;
+use eve\common\access\exception\AccessorException;
 
 
 
@@ -21,7 +20,7 @@ extends TestCase
 	public function testInheritance() {
 		$ins = $this->_produceException();
 
-		$this->assertInstanceOf(AAccessorException::class, $ins);
+		$this->assertInstanceOf(\eve\common\access\exception\AAccessorException::class, $ins);
 	}
 
 

@@ -3,7 +3,7 @@
 namespace eve\common\assembly;
 
 use eve\common\access\ItemAccessor;
-use eve\common\access\AccessorException;
+use eve\common\access\exception\AccessorException;
 use eve\common\assembly\exception\InvalidKeyException;
 use eve\common\assembly\exception\DependencyLoopException;
 

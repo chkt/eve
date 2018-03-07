@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use eve\common\IHost;
 use eve\common\IDriver;
 use eve\common\access\IItemAccessor;
-use eve\common\access\AccessorException;
+use eve\common\access\exception\IAccessorException;
 use eve\common\assembly\IAssemblyHost;
 use eve\driver\IInjectorHost;
 use eve\driver\IInjectorDriver;
@@ -99,7 +99,7 @@ extends TestCase
 	public function testGetItem_invalidKey() {
 		$driver = $this->_produceDriver();
 
-		$this->expectException(AccessorException::class);
+		$this->expectException(IAccessorException::class);
 		$this->expectExceptionMessage('ACC invalid key "foo"');
 
 		$driver->getItem('foo');
