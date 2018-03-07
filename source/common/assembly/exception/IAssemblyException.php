@@ -2,7 +2,7 @@
 
 namespace eve\common\assembly\exception;
 
-use eve\common\access\IAccessorException;
+use eve\common\access\exception\IAccessorException;
 
 
 

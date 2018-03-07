@@ -6,9 +6,9 @@ use PHPUnit\Framework\TestCase;
 
 use eve\common\IFactory;
 use eve\common\factory\IAccessorFactory;
-use eve\common\access\IAccessorException;
 use eve\common\access\IItemAccessor;
 use eve\common\access\TraversableAccessor;
+use eve\common\access\exception\IAccessorException;
 use eve\common\assembly\IAssemblyHost;
 use eve\inject\IInjector;
 use eve\inject\IInjectable;

@@ -1,6 +1,6 @@
 <?php
 
-namespace eve\common\access;
+namespace eve\common\access\exception;
 
 
 

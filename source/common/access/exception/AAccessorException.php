@@ -2,8 +2,6 @@
 
 namespace eve\common\access\exception;
 
-use eve\common\access\IAccessorException;
-
 
 
 abstract class AAccessorException
