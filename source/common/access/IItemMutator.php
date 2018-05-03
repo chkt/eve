@@ -8,5 +8,5 @@ interface IItemMutator
 extends IItemAccessor, IKeyMutator
 {
 
-	public function setItem(string $id, $item) : IItemMutator;
+	public function setItem(string $key, $item) : IItemMutator;
 }
