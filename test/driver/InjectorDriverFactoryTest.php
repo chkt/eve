@@ -9,6 +9,7 @@ use eve\common\factory\ICoreFactory;
 use eve\common\factory\ASimpleFactory;
 use eve\common\access\ITraversableAccessor;
 use eve\common\assembly\IAssemblyHost;
+use eve\inject\IInjector;
 use eve\driver\IInjectorDriver;
 use eve\driver\InjectorDriverFactory;
 
@@ -57,10 +58,28 @@ extends TestCase
 	}
 
 
-	private function _mockBaseFactory() {
+	private function _mockBaseFactory(callable $mergeMethod = null) {
+		if (is_null($mergeMethod)) $mergeMethod = function() {
+			return [];
+		};
+
 		$base = $this
 			->getMockBuilder(ICoreFactory::class)
 			->getMock();
+
+		$base
+			->method('callMethod')
+			->with(
+				$this->equalTo(\eve\common\base\ArrayOperation::class),
+				$this->equalTo('merge'),
+				$this->logicalAnd(
+					$this->isType('array'),
+					$this->countOf(2)
+				)
+			)
+			->willReturnCallback(function(string $qname, string $method, array $args) use ($mergeMethod) {
+				return $mergeMethod(...$args);
+			});
 
 		$base
 			->method('newInstance')
@@ -96,8 +115,26 @@ extends TestCase
 	}
 
 	public function testProduce() {
-		$fab = $this->_produceDriverFactory();
-		$driver = $fab->produce();
+		$config = [ 'foo' => 'bar' ];
+
+		$base = $this->_mockBaseFactory(function(array $a, array $b) use ($config) : array {
+			$this->assertEquals([
+				'resolvers' => [
+					IInjector::TYPE_INJECTOR => \eve\inject\resolve\HostResolver::class,
+					IInjector::TYPE_LOCATOR => \eve\inject\resolve\HostResolver::class,
+					IInjector::TYPE_ARGUMENT => \eve\inject\resolve\ArgumentResolver::class,
+					IInjector::TYPE_FACTORY => \eve\inject\resolve\FactoryResolver::class
+				],
+				'providers' => []
+			], $a);
+
+			$this->assertEquals($config, $b);
+
+			return $a;
+		});
+		$fab = $this->_produceDriverFactory($base);
+
+		$driver = $fab->produce($config);
 
 		$this->assertInstanceOf(IInjectorDriver::class, $driver);
 		$this->assertObjectHasAttribute('p0', $driver);
