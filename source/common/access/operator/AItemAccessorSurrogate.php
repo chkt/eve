@@ -8,7 +8,7 @@ use eve\common\access\exception\AccessorException;
 
 
 
-abstract class AItemAccessorComposition		//TODO: misnamed, should be AItemAccessorSurrogate
+abstract class AItemAccessorSurrogate
 extends AProjectableSurrogate
 implements IItemAccessorSurrogate
 {

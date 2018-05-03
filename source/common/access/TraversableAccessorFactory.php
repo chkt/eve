@@ -3,12 +3,12 @@
 namespace eve\common\access;
 
 use eve\common\factory\ICoreFactory;
-use eve\common\access\operator\AItemAccessorComposition;
+use eve\common\access\operator\AItemAccessorSurrogate;
 
 
 
 final class TraversableAccessorFactory
-extends AItemAccessorComposition
+extends AItemAccessorSurrogate
 {
 
 	private $_baseFactory;

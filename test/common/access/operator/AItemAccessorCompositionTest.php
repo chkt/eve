@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 use eve\common\access\ITraversableAccessor;
 use eve\common\access\exception\IAccessorException;
-use eve\common\access\operator\AItemAccessorComposition;
+use eve\common\access\operator\AItemAccessorSurrogate;
 
 
 
@@ -36,7 +36,7 @@ extends TestCase
 
 	public function _mockComposition() {
 		$operator = $this
-			->getMockBuilder(AItemAccessorComposition::class)
+			->getMockBuilder(AItemAccessorSurrogate::class)
 			->getMockForAbstractClass();
 
 		$operator
