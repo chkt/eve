@@ -10,7 +10,7 @@ use eve\common\access\operator\AItemAccessorSurrogate;
 
 
 
-final class AItemAccessorCompositionTest
+final class AItemAccessorSurrogateTest
 extends TestCase
 {
 
