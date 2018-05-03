@@ -4,9 +4,8 @@ namespace test\common\access\operator;
 
 use PHPUnit\Framework\TestCase;
 
-use eve\common\projection\IProjectable;
-use eve\common\access\exception\IAccessorException;
 use eve\common\access\ITraversableAccessor;
+use eve\common\access\exception\IAccessorException;
 use eve\common\access\operator\AItemAccessorComposition;
 
 
@@ -15,16 +14,23 @@ final class AItemAccessorCompositionTest
 extends TestCase
 {
 
-	public function _mockProjectable(string $qname = IProjectable::class, array $data = []) {
-		$projectable = $this
-			->getMockBuilder($qname)
+	public function _mockAccessor(array $data = []) {
+		$access = $this
+			->getMockBuilder(ITraversableAccessor::class)
 			->getMock();
 
-		$projectable
+		$access
+			->method('getItem')
+			->with($this->isType('string'))
+			->willReturnCallback(function(string $key) use ($data) {
+				return $data[$key];
+			});
+
+		$access
 			->method('getProjection')
 			->willReturn($data);
 
-		return $projectable;
+		return $access;
 	}
 
 
@@ -37,7 +43,7 @@ extends TestCase
 			->method('produce')
 			->with($this->isType('array'))
 			->willReturnCallback(function(array $data) {
-				return $this->_mockProjectable(ITraversableAccessor::class, $data);
+				return $this->_mockAccessor($data);
 			});
 
 		return $operator;
@@ -54,26 +60,16 @@ extends TestCase
 
 	public function testSelect() {
 		$operator = $this->_mockComposition();
-		$a = $this->_mockProjectable(IProjectable::class, [ 'foo' => [ 'bar' => 1 ]]);
+		$a = $this->_mockAccessor([ 'foo' => [ 'bar' => 1 ]]);
 		$b = $operator->select($a, 'foo');
 
-		$this->assertInstanceOf(IProjectable::class, $b);
+		$this->assertInstanceOf(ITraversableAccessor::class, $b);
 		$this->assertEquals(['bar' => 1], $b->getProjection());
-	}
-
-	public function testSelect_noKey() {
-		$operator = $this->_mockComposition();
-		$a = $this->_mockProjectable();
-
-		$this->expectException(IAccessorException::class);
-		$this->expectExceptionMessage('ACC invalid key "foo"');
-
-		$operator->select($a, 'foo');
 	}
 
 	public function testSelect_notNested() {
 		$operator = $this->_mockComposition();
-		$a = $this->_mockProjectable(IProjectable::class, [ 'foo' => 1 ]);
+		$a = $this->_mockAccessor([ 'foo' => 1 ]);
 
 		$this->expectException(IAccessorException::class);
 		$this->expectExceptionMessage('ACC invalid key "foo"');
