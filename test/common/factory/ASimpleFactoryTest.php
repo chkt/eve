@@ -21,33 +21,22 @@ extends TestCase
 			->getMock();
 	}
 
-	private function _mockFactory(callable $fn, array $config = null, ICoreFactory $core = null) {
+	private function _mockFactory(callable $fn, ICoreFactory $core = null) {
 		if (is_null($core)) $core = $this->_mockCoreFactory();
-
-		$methods = ['_produceInstance'];
-
-		if (!is_null($config)) $methods[] = '_getConfigDefaults';
 
 		$ins = $this
 			->getMockBuilder(ASimpleFactory::class)
 			->setConstructorArgs([$core])
-			->setMethods($methods)
+			->setMethods([ '_produceInstance' ])
 			->getMockForAbstractClass();
 
 		$ins
-			->expects($this->any())
 			->method('_produceInstance')
 			->with(
 				$this->isInstanceOf(ICoreFactory::class),
 				$this->isType('array')
 			)
 			->willReturnCallback($fn);
-
-		if (!is_null($config)) $ins
-			->expects($this->any())
-			->method('_getConfigDefaults')
-			->with()
-			->willReturn($config);
 
 		return $ins;
 	}
@@ -62,64 +51,34 @@ extends TestCase
 
 
 	public function testProduce() {
-		$a = [
-			'a' => 1,
-			'b' => 1,
-			'c' => 1,
-			'd' => [ 1 ],
-			'e' => [
-				'f' => 1,
-				'g' => [
-					'h' => 1,
-					'i' => 1,
-					'j' => 1,
-					'k' => 1
-				]
-			]
+		$config = [ 'bar' => 2 ];
+		$settings = [
+			'foo' => 1,
+			'bar' => 2
 		];
 
-		$b = [
-			'b' => 2,
-			'c' => [ 3 ],
-			'd' => 4,
-			'e' => [
-				'g' => [
-					'i' => 5,
-					'j' => [ 6 ],
-					'k' => 7
-				]
-			]
-		];
+		$base = $this->_mockCoreFactory();
 
-		$c = [
-			'a' => 1,
-			'b' => 2,
-			'c' => [ 3 ],
-			'd' => 4,
-			'e' => [
-				'f' => 1,
-				'g' => [
-					'h' => 1,
-					'i' => 5,
-					'j' => [ 6 ],
-					'k' => 7
-				]
-			]
-		];
+		$base
+			->method('callMethod')
+			->with(
+				$this->equalTo(\eve\common\base\ArrayOperation::class),
+				$this->equalTo('merge'),
+				$this->isType('array')
+			)
+			->willReturnCallback(function(string $qname, string $method, array $args) use ($config, $settings) {
+				$this->assertEquals([], $args[0]);
+				$this->assertEquals($config, $args[1]);
 
-		$factoryA = $this->_mockFactory(function(ICoreFactory $core, array $config) use ($b) {
-			$this->assertEquals($b, $config);
+				return $settings;
+			});
+
+		$factory = $this->_mockFactory(function(ICoreFactory $core, array $config) use ($settings) {
+			$this->assertEquals($settings, $config);
 
 			return 'foo';
-		});
+		}, $base);
 
-		$factoryB = $this->_mockFactory(function(ICoreFactory $core, array $config) use ($c) {
-			$this->assertEquals($c, $config);
-
-			return 'bar';
-		}, $a);
-
-		$this->assertEquals('foo', $factoryA->produce($b));
-		$this->assertEquals('bar', $factoryB->produce($b));
+		$this->assertEquals('foo', $factory->produce($config));
 	}
 }
