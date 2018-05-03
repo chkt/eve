@@ -53,6 +53,9 @@ extends TestCase
 	public function testInheritance() {
 		$operator = $this->_mockComposition();
 
+		$this->assertInstanceOf(\eve\common\factory\ISimpleFactory::class, $operator);
+		$this->assertInstanceOf(\eve\common\access\operator\IItemAccessorSurrogate::class, $operator);
+		$this->assertInstanceOf(\eve\common\access\operator\IItemAccessorComposition::class, $operator);
 		$this->assertInstanceOf(\eve\common\projection\operator\IProjectableSurrogate::class, $operator);
 		$this->assertInstanceOf(\eve\common\projection\operator\AProjectableSurrogate::class, $operator);
 	}
