@@ -2,6 +2,8 @@
 
 namespace eve\common\factory;
 
+use eve\common\base\ArrayOperation;
+
 
 
 abstract class ASimpleFactory
@@ -16,20 +18,6 @@ implements ISimpleFactory
 	}
 
 
-	private function _mergeConfig(array $a, array $b) : array {
-		foreach ($b as $key => $value) {
-			if (
-				!array_key_exists($key, $a) ||
-				!is_array($a[$key]) ||
-				!is_array($value)
-			) $a[$key] = $value;
-			else $a[$key] = $this->_mergeConfig($a[$key], $value);
-		}
-
-		return $a;
-	}
-
-
 	protected function _getConfigDefaults() : array {
 		return [];
 	}
@@ -39,7 +27,7 @@ implements ISimpleFactory
 
 	public function produce(array& $config = []) {
 		$defaults = $this->_getConfigDefaults();
-		$settings = $this->_mergeConfig($defaults, $config);
+		$settings = $this->_core->callMethod(ArrayOperation::class, 'merge', [$defaults, $config]);
 
 		return $this->_produceInstance($this->_core, $settings);
 	}
