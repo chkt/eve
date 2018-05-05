@@ -16,9 +16,6 @@ implements ILocator
 		return [[
 			'type' => IInjector::TYPE_ARGUMENT,
 			'data' => $config->getItem('driver')
-		], [
-			'type' => IInjector::TYPE_ARGUMENT,
-			'data' => $config->getItem('providerNames')
 		]];
 	}
 
