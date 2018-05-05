@@ -143,6 +143,8 @@ extends TestCase
 		$this->assertInstanceOf(ICoreFactory::class, $driver->p0->p0);
 		$this->assertObjectHasAttribute('p1', $driver->p0);
 		$this->assertInstanceOf(ISimpleFactory::class, $driver->p0->p1);
+		$this->assertObjectHasAttribute('p0', $driver->p0->p1);
+		$this->assertInstanceOf(ICoreFactory::class, $driver->p0->p1->p0);
 		$this->assertObjectHasAttribute('p2', $driver->p0);
 		$this->assertInstanceOf(ITraversableAccessor::class, $driver->p0->p2);
 		$this->assertObjectHasAttribute('p0', $driver->p0->p2);
