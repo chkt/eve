@@ -131,17 +131,12 @@ extends TestCase
 
 	public function testDependencyConfig() {
 		$driver = 'foo';
-		$names = 'bar';
 
 		$this->assertEquals([[
 			'type' => IInjector::TYPE_ARGUMENT,
 			'data' => $driver
-		], [
-			'type' => IInjector::TYPE_ARGUMENT,
-			'data' => $names
 		]], ProviderProvider::getDependencyConfig($this->_produceAccessor([
-			'driver' => $driver,
-			'providerNames' => $names
+			'driver' => $driver
 		])));
 	}
 
