@@ -10,5 +10,5 @@ interface ISimpleFactory
 extends IFactory
 {
 
-	public function produce(array& $config);
+	public function produce(array& $config = []);
 }
