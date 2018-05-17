@@ -7,5 +7,5 @@ namespace eve\common;
 interface IGenerateable
 {
 
-	public function& iterate() : \Generator;
+	public function iterate() : \Generator;
 }
