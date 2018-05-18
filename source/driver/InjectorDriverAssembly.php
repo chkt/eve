@@ -8,7 +8,7 @@ use eve\common\access\IItemAccessor;
 use eve\common\access\ITraversableAccessor;
 use eve\common\access\IItemMutator;
 use eve\common\assembly\IAssemblyHost;
-use eve\common\assembly\AAssemblyHost;
+use eve\common\assembly\ASingularHost;
 use eve\inject\IInjector;
 use eve\inject\cache\IKeyEncoder;
 use eve\provide\ILocator;
@@ -17,7 +17,7 @@ use eve\entity\IEntityParser;
 
 
 class InjectorDriverAssembly
-extends AAssemblyHost
+extends ASingularHost
 {
 
 	private $_config;
@@ -36,6 +36,11 @@ extends AAssemblyHost
 		parent::__construct($data);
 
 		$this->_config = $config;
+	}
+
+
+	protected function _getFactoryArguments() : array {
+		return [ $this->_config ];
 	}
 
 
@@ -91,14 +96,5 @@ extends AAssemblyHost
 					->getItem('accessorFactory')
 					->select($config, 'providers')
 			]);
-	}
-
-
-	protected function _produceItem(string $key) {
-		$method = '_produce' . ucfirst($key);
-
-		if (!method_exists($this, $method)) throw new \ErrorException(sprintf('FAC invalid key "%s"', $key));
-
-		return $this->$method($this->_config);
 	}
 }
