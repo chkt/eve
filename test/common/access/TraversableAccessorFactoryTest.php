@@ -62,4 +62,11 @@ extends TestCase
 
 		$this->assertEquals(3, $ins->getItem('foo'));
 	}
+
+	public function testProduce_empty() {
+		$fab = $this->_produceAccessorFactory();
+		$ins = $fab->produce();
+
+		$this->assertInstanceOf(TraversableAccessor::class, $ins);
+	}
 }
