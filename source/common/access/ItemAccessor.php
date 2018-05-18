@@ -18,9 +18,7 @@ implements IItemAccessor
 	}
 
 
-	protected function _handleAccessorException(AccessorException $ex) : bool {
-		return false;
-	}
+	protected function _handleAccessFailure(array& $data, string $key) {}
 
 
 	final protected function& _useData() : array {
@@ -34,15 +32,14 @@ implements IItemAccessor
 
 
 	public function getItem(string $key) {
-		if (!array_key_exists($key, $this->_data)) {
-			$ex = new AccessorException($key);
+		$data =& $this->_data;
 
-			if (
-				!$this->_handleAccessorException($ex) ||
-				!array_key_exists($key, $this->_data)
-			) throw $ex;
+		if (!array_key_exists($key, $data)) {
+			$this->_handleAccessFailure($data, $key);
+
+			if (!array_key_exists($key, $data)) throw new AccessorException($key);
 		}
 
-		return $this->_data[$key];
+		return $data[$key];
 	}
 }
