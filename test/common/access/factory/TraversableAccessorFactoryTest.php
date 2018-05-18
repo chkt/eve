@@ -1,6 +1,6 @@
 <?php
 
-namespace test\access;
+namespace test\common\access\factory;
 
 use PHPUnit\Framework\TestCase;
 use eve\common\factory\ICoreFactory;
