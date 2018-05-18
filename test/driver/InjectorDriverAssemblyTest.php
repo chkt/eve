@@ -10,6 +10,7 @@ use eve\common\projection\IProjectable;
 use eve\common\access\ITraversableAccessor;
 use eve\common\assembly\IAssemblyHost;
 use eve\common\assembly\AAssemblyHost;
+use eve\common\assembly\exception\InvalidKeyException;
 use eve\driver\InjectorDriverAssembly;
 
 
@@ -125,8 +126,7 @@ extends TestCase
 	public function test_produceItem_invalidKey() {
 		$assembly = $this->_mockAssembly();
 
-		$this->expectException(\ErrorException::class);
-		$this->expectExceptionMessage('FAC invalid key "foo"');
+		$this->expectException(InvalidKeyException::class);
 
 		$assembly->getItem('foo');
 	}
