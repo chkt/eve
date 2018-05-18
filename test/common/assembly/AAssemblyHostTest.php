@@ -21,7 +21,7 @@ extends TestCase
 
 	private function _mockHost(array& $data = [], callable $fn = null) {
 		if (is_null($fn)) $fn = function(string $key) {
-			return false;
+			return null;
 		};
 
 		$host = $this
@@ -49,19 +49,15 @@ extends TestCase
 	}
 
 
-	public function testHasKey() {
+	public function testHasAssembled() {
 		$data = [ 'bar' => 1 ];
 		$host = $this->_mockHost($data, function(string $key) {
-			if ($key !== 'foo') throw new InvalidKeyException($key);
-
-			return 0;
+			$this->fail($key);
 		});
 
-		$this->assertTrue($host->hasKey('foo'));
-		$this->assertArrayHasKey('foo', $data);
-		$this->assertEquals(0, $data['foo']);
-		$this->assertTrue($host->hasKey('bar'));
-		$this->assertFalse($host->hasKey('baz'));
+		$this->assertFalse($host->hasAssembled('foo'));
+		$this->assertTrue($host->hasAssembled('bar'));
+		$this->assertFalse($host->hasAssembled('baz'));
 	}
 
 
