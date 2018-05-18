@@ -2,33 +2,29 @@
 
 namespace eve\provide;
 
+use eve\common\access\IItemAccessor;
 use eve\common\access\ITraversableAccessor;
 use eve\common\assembly\IAssemblyHost;
-use eve\common\assembly\AAssemblyHost;
-use eve\common\assembly\exception\InvalidKeyException;
+use eve\common\assembly\AUniformHost;
 
 
 
 class ProviderAssembly
-extends AAssemblyHost
+extends AUniformHost
 {
 
 	private $_driverAssembly;
-	private $_config;
 
 
 	public function __construct(IAssemblyHost $driverAssembly, ITraversableAccessor $config) {
-		parent::__construct();
+		parent::__construct($config);
 
 		$this->_driverAssembly = $driverAssembly;
-		$this->_config = $config;
 	}
 
 
-	protected function _produceItem(string $key) : IProvider {
-		if (!$this->_config->hasKey($key)) throw new InvalidKeyException($key);
-
-		$item = $this->_config->getItem($key);
+	protected function _produceFromMap(IItemAccessor $map, string $key) {
+		$item = $map->getItem($key);
 		$data = is_array($item) ? $item : [ 'qname' => $item ];
 		$qname = $data['qname'];
 		$config = array_key_exists('config', $data) ? $data['config'] : [];
