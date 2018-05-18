@@ -11,4 +11,5 @@ interface IAssemblyHost
 extends IFactory, IHost
 {
 
+	public function hasAssembled(string $key) : bool;
 }
