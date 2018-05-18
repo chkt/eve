@@ -2,35 +2,31 @@
 
 namespace eve\inject\resolve;
 
+use eve\common\access\IItemAccessor;
 use eve\common\access\ITraversableAccessor;
 use eve\common\assembly\IAssemblyHost;
-use eve\common\assembly\AAssemblyHost;
-use eve\common\assembly\exception\InvalidKeyException;
+use eve\common\assembly\AUniformHost;
 
 
 
 class ResolverAssembly
-extends AAssemblyHost
+extends AUniformHost
 {
 
 	private $_driverAssembly;
-	private $_config;
 
 
 	public function __construct(IAssemblyHost $driverAssembly, ITraversableAccessor $config) {
-		parent::__construct();
+		parent::__construct($config);
 
 		$this->_driverAssembly = $driverAssembly;
-		$this->_config = $config;
 	}
 
 
-	protected function _produceItem(string $key) : IInjectorResolver {
-		if (!$this->_config->hasKey($key)) throw new InvalidKeyException($key);
-
+	protected function _produceFromMap(IItemAccessor $map, string $key) {
 		return $this->_driverAssembly
 			->getItem('injector')
-			->produce($this->_config->getItem($key), [
+			->produce($map->getItem($key), [
 				'driver' => $this->_driverAssembly
 			]);
 	}
