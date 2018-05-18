@@ -21,7 +21,7 @@ extends TestCase
 		$ins = $this
 			->getMockBuilder(ItemAccessor::class)
 			->setConstructorArgs([ & $data])
-			->setMethods(['_handleAccessorException'])
+			->setMethods(['_handleAccessFailure'])
 			->getMock();
 
 		return $ins;
@@ -91,12 +91,13 @@ extends TestCase
 
 		$ins
 			->expects($this->once())
-			->method('_handleAccessorException')
-			->with($this->isInstanceOf(IAccessorException::class))
-			->willReturnCallback(function(IAccessorException $ex) use (& $data) : bool {
-				$this->assertEquals('baz', $ex->getKey());
-
-				$data['baz'] = 3;
+			->method('_handleAccessFailure')
+			->with(
+				$this->equalTo($data),
+				$this->equalTo('baz')
+			)
+			->willReturnCallback(function(array& $data, string $key) : bool {
+				$data[$key] = 3;
 
 				return true;
 			});
