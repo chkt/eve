@@ -1,8 +1,9 @@
 <?php
 
-namespace eve\common\access;
+namespace eve\common\access\factory;
 
 use eve\common\factory\ICoreFactory;
+use eve\common\access\TraversableAccessor;
 use eve\common\access\operator\AItemAccessorSurrogate;
 
 

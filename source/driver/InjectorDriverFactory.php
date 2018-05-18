@@ -29,7 +29,7 @@ extends ASimpleFactory
 
 
 	protected function _produceAccessorFactory(ICoreFactory $base, array $config) : ISimpleFactory {
-		return $base->newInstance(\eve\common\access\TraversableAccessorFactory::class, [ $base ]);
+		return $base->newInstance(\eve\common\access\factory\TraversableAccessorFactory::class, [ $base ]);
 	}
 
 	protected function _produceAssembly(ICoreFactory $base, ISimpleFactory $access, ITraversableAccessor $config) : IAssemblyHost {

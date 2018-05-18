@@ -91,10 +91,10 @@ extends TestCase
 				)
 			)
 			->willReturnCallback(function(string $qname, array $args = []) {
-				if ($qname === \eve\common\access\TraversableAccessorFactory::class) return $this->_mockAccessorFactory($args);
+				if ($qname === \eve\common\access\factory\TraversableAccessorFactory::class) return $this->_mockAccessorFactory($args);
 				else if ($qname === \eve\driver\InjectorDriverAssembly::class) return $this->_mockDriverAssembly($args);
 				else if ($qname === \eve\driver\InjectorDriver::class) return $this->_mockInterface(IInjectorDriver::class, $args);
-				else $this->assertFalse(true);
+				else $this->fail($qname);
 			});
 
 		return $base;

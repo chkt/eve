@@ -3,12 +3,9 @@
 namespace test\access;
 
 use PHPUnit\Framework\TestCase;
-
-use eve\common\IFactory;
-use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ICoreFactory;
-use eve\common\access\TraversableAccessorFactory;
 use eve\common\access\TraversableAccessor;
+use eve\common\access\factory\TraversableAccessorFactory;
 use eve\common\access\operator\AItemAccessorSurrogate;
 
 
