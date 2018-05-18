@@ -16,7 +16,7 @@ implements ITraversableAccessor
 	}
 
 
-	public function& iterate() : \Generator {
+	public function iterate() : \Generator {
 		foreach ($this->_useData() as $key => $value) yield $key => $value;
 	}
 
