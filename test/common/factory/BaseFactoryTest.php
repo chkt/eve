@@ -11,7 +11,7 @@ use eve\common\factory\BaseFactory;
 
 
 
-final class CoreFactoryTest
+final class BaseFactoryTest
 extends TestCase
 {
 
