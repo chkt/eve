@@ -4,7 +4,7 @@ namespace eve\driver;
 
 use eve\common\assembly\IAssemblyHost;
 use eve\common\factory\ISimpleFactory;
-use eve\common\factory\ICoreFactory;
+use eve\common\factory\IBaseFactory;
 use eve\common\access\IItemMutator;
 use eve\common\access\exception\AccessorException;
 use eve\inject\IInjector;
@@ -28,7 +28,7 @@ implements IInjectorDriver
 
 	public function hasKey(string $key) : bool {
 		return in_array($key, [
-			self::ITEM_CORE_FACTORY,
+			self::ITEM_BASE_FACTORY,
 			self::ITEM_ACCESSOR_FACTORY,
 			self::ITEM_KEY_ENCODER,
 			self::ITEM_INSTANCE_CACHE,
@@ -45,8 +45,8 @@ implements IInjectorDriver
 	}
 
 
-	public function getCoreFactory() : ICoreFactory {
-		return $this->_assembly->getItem(self::ITEM_CORE_FACTORY);
+	public function getBaseFactory() : IBaseFactory {
+		return $this->_assembly->getItem(self::ITEM_BASE_FACTORY);
 	}
 
 	public function getAccessorFactory() : ISimpleFactory {

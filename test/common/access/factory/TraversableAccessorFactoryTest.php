@@ -3,7 +3,7 @@
 namespace test\common\access\factory;
 
 use PHPUnit\Framework\TestCase;
-use eve\common\factory\ICoreFactory;
+use eve\common\factory\IBaseFactory;
 use eve\common\access\TraversableAccessor;
 use eve\common\access\factory\TraversableAccessorFactory;
 use eve\common\access\operator\AItemAccessorSurrogate;
@@ -16,7 +16,7 @@ extends TestCase
 
 	private function _mockFactory() {
 		$ins = $this
-			->getMockBuilder(ICoreFactory::class)
+			->getMockBuilder(IBaseFactory::class)
 			->getMock();
 
 		$ins
@@ -30,7 +30,7 @@ extends TestCase
 		return $ins;
 	}
 
-	private function _produceAccessorFactory(ICoreFactory $factory = null) {
+	private function _produceAccessorFactory(IBaseFactory $factory = null) {
 		if (is_null($factory)) $factory = $this->_mockFactory();
 
 		return new TraversableAccessorFactory($factory);

@@ -5,7 +5,7 @@ namespace test\inject;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\factory\ISimpleFactory;
-use eve\common\factory\ICoreFactory;
+use eve\common\factory\IBaseFactory;
 use eve\common\access\IItemMutator;
 use eve\common\access\TraversableAccessor;
 use eve\common\access\TraversableMutator;
@@ -36,9 +36,9 @@ extends TestCase
 		return $ins;
 	}
 
-	private function _mockFactory() : ICoreFactory {
+	private function _mockFactory() : IBaseFactory {
 		$ins = $this
-			->getMockBuilder(ICoreFactory::class)
+			->getMockBuilder(IBaseFactory::class)
 			->getMock();
 
 		$ins
@@ -146,7 +146,7 @@ extends TestCase
 			->method('getItem')
 			->with($this->isType('string'))
 			->willReturnCallback(function(string $key) use ($factory, $accessor, $encoder, $cache) {
-				if ($key === 'coreFactory') return $factory;
+				if ($key === 'baseFactory') return $factory;
 				else if ($key === 'accessorFactory') return $accessor;
 				else if ($key === 'keyEncoder') return $encoder;
 				else if ($key === 'instanceCache') return $cache;

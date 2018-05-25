@@ -4,7 +4,7 @@ namespace test\driver;
 
 use PHPUnit\Framework\TestCase;
 
-use eve\common\factory\ICoreFactory;
+use eve\common\factory\IBaseFactory;
 use eve\common\factory\ISimpleFactory;
 use eve\common\projection\IProjectable;
 use eve\common\access\ITraversableAccessor;
@@ -33,10 +33,10 @@ extends TestCase
 		return $ins;
 	}
 
-	private function _mockCoreFactory() {
-		$core = $this->_mockInterface(ICoreFactory::class);
+	private function _mockBaseFactory() {
+		$base = $this->_mockInterface(IBaseFactory::class);
 
-		$core
+		$base
 			->method('newInstance')
 			->with(
 				$this->isType('string'),
@@ -60,7 +60,7 @@ extends TestCase
 				return $this->_mockInterface($map[$qname], $args);
 			});
 
-		return $core;
+		return $base;
 	}
 
 	private function _mockAccessorFactory() {
@@ -83,12 +83,12 @@ extends TestCase
 	}
 
 	private function _mockAssembly(
-		ICoreFactory $base = null,
+		IBaseFactory $base = null,
 		ISimpleFactory $access = null,
 		ITraversableAccessor $config = null,
 		array $methods = [ '__' ]
 	) {
-		if (is_null($base)) $base = $this->_mockCoreFactory();
+		if (is_null($base)) $base = $this->_mockBaseFactory();
 		if (is_null($access)) $access = $this->_mockAccessorFactory();
 		if (is_null($config)) $config = $this->_produceAccessor();
 
@@ -131,11 +131,11 @@ extends TestCase
 		$assembly->getItem('foo');
 	}
 
-	public function testGetItem_coreFactory() {
-		$base = $this->_mockCoreFactory();
+	public function testGetItem_baseFactory() {
+		$base = $this->_mockBaseFactory();
 		$assembly = $this->_mockAssembly($base);
 
-		$this->assertSame($base, $assembly->getItem('coreFactory'));
+		$this->assertSame($base, $assembly->getItem('baseFactory'));
 	}
 
 	public function testGetItem_accessorFactory() {
@@ -147,7 +147,7 @@ extends TestCase
 
 
 	public function test_produceKeyEncoder() {
-		$base = $this->_mockCoreFactory();
+		$base = $this->_mockBaseFactory();
 		$assembly = $this->_mockAssembly($base);
 		$encoder = $assembly->getItem('keyEncoder');
 

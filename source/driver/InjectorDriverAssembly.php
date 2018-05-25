@@ -2,7 +2,7 @@
 
 namespace eve\driver;
 
-use eve\common\factory\ICoreFactory;
+use eve\common\factory\IBaseFactory;
 use eve\common\factory\ISimpleFactory;
 use eve\common\access\IItemAccessor;
 use eve\common\access\ITraversableAccessor;
@@ -24,12 +24,12 @@ extends ASingularHost
 
 
 	public function __construct(
-		ICoreFactory $baseFactory,
+		IBaseFactory $baseFactory,
 		ISimpleFactory $accessorFactory,
 		ITraversableAccessor $config
 	) {
 		$data = [
-			'coreFactory' => $baseFactory,
+			'baseFactory' => $baseFactory,
 			'accessorFactory' => $accessorFactory
 		];
 
@@ -45,26 +45,26 @@ extends ASingularHost
 
 
 	protected function _produceKeyEncoder(ITraversableAccessor $config) : IKeyEncoder {
-		$base = $this->getItem('coreFactory');
+		$base = $this->getItem('baseFactory');
 
 		return $base->newInstance(\eve\inject\cache\KeyEncoder::class, [ $base ]);
 	}
 
 	protected function _produceInstanceCache(ITraversableAccessor $config) : IItemMutator {
 		return $this
-			->getItem('coreFactory')
+			->getItem('baseFactory')
 			->newInstance(\eve\common\access\TraversableMutator::class, [ [] ]);
 	}
 
 	protected function _produceInjector(ITraversableAccessor $config) : IInjector {
 		return $this
-			->getItem('coreFactory')
+			->getItem('baseFactory')
 			->newInstance(\eve\inject\IdentityInjector::class, [ $this ]);
 	}
 
 	protected function _produceResolverAssembly(ITraversableAccessor $config) : IAssemblyHost {
 		return $this
-			->getItem('coreFactory')
+			->getItem('baseFactory')
 			->newInstance(\eve\inject\resolve\ResolverAssembly::class, [
 				$this,
 				$this
@@ -75,7 +75,7 @@ extends ASingularHost
 
 	protected function _produceEntityParser(ITraversableAccessor $config) : IEntityParser {
 		return $this
-			->getItem('coreFactory')
+			->getItem('baseFactory')
 			->newInstance(\eve\entity\EntityParser::class);
 	}
 
@@ -89,7 +89,7 @@ extends ASingularHost
 
 	protected function _produceProviderAssembly(ITraversableAccessor $config) : IItemAccessor {
 		return $this
-			->getItem('coreFactory')
+			->getItem('baseFactory')
 			->newInstance(\eve\provide\ProviderAssembly::class, [
 				$this,
 				$this

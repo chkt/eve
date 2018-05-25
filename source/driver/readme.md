@@ -4,11 +4,11 @@
 Creating a basic driver is easy.
 
 ```php
-use eve\common\factory\CoreFactory;
+use eve\common\factory\BaseFactory;
 use eve\driver\InjectorDriverFactory;
 
-$core = new CoreFactory();
-$factory = $core->newInstance(InjectorDriverFactory::class, [ $core ]);
+$base = new BaseFactory();
+$factory = $base->newInstance(InjectorDriverFactory::class, [ $base ]);
 $driver = $factory->produce();
 ```
 

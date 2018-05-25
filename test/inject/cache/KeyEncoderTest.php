@@ -4,7 +4,7 @@ namespace test\inject\cache;
 
 use PHPUnit\Framework\TestCase;
 
-use eve\common\factory\ICoreFactory;
+use eve\common\factory\IBaseFactory;
 use eve\common\access\ITraversableAccessor;
 use eve\inject\IInjectableIdentity;
 use eve\inject\cache\IKeyEncoder;
@@ -18,7 +18,7 @@ extends TestCase
 
 	private function _mockBaseFactory() {
 		return $this
-			->getMockBuilder(ICoreFactory::class)
+			->getMockBuilder(IBaseFactory::class)
 			->getMock();
 	}
 
@@ -29,7 +29,7 @@ extends TestCase
 	}
 
 
-	private function _produceKeyEncoder(ICoreFactory $base = null) {
+	private function _produceKeyEncoder(IBaseFactory $base = null) {
 		if (is_null($base)) $base = $this->_mockBaseFactory();
 
 		return new KeyEncoder($base);

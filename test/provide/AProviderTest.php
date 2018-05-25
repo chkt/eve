@@ -4,7 +4,7 @@ namespace test\provide;
 
 use PHPUnit\Framework\TestCase;
 
-use eve\common\factory\ICoreFactory;
+use eve\common\factory\IBaseFactory;
 use eve\common\access\IItemAccessor;
 use eve\common\access\TraversableAccessor;
 use eve\common\assembly\IAssemblyHost;
@@ -41,13 +41,13 @@ extends TestCase
 		return $ins;
 	}
 
-	private function _mockFactory(callable $fn = null) : ICoreFactory {
+	private function _mockFactory(callable $fn = null) : IBaseFactory {
 		if (is_null($fn)) $fn = function(string $qname, string $iname) {
 			return $qname === 'foo' && $iname === IInjectable::class;
 		};
 
 		$ins = $this
-			->getMockBuilder(ICoreFactory::class)
+			->getMockBuilder(IBaseFactory::class)
 			->getMock();
 
 		$ins
@@ -59,7 +59,7 @@ extends TestCase
 		return $ins;
 	}
 
-	private function _mockDriverAssembly(IInjector $injector, ICoreFactory $base) : IAssemblyHost {
+	private function _mockDriverAssembly(IInjector $injector, IBaseFactory $base) : IAssemblyHost {
 		$ins = $this
 			->getMockBuilder(IAssemblyHost::class)
 			->getMock();
@@ -69,14 +69,14 @@ extends TestCase
 			->with($this->isType('string'))
 			->willReturnCallback(function(string $key) use ($injector, $base) {
 				if ($key === 'injector') return $injector;
-				else if ($key === 'coreFactory') return $base;
+				else if ($key === 'baseFactory') return $base;
 				else $this->fail();
 			});
 
 		return $ins;
 	}
 
-	private function _mockProvider(ICoreFactory $factory = null, callable $fn = null) : AProvider {
+	private function _mockProvider(IBaseFactory $factory = null, callable $fn = null) : AProvider {
 		$injector = $this->_mockInjector();
 
 		if (is_null($factory)) $factory = $this->_mockFactory();

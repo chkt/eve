@@ -20,7 +20,7 @@ extends Injector
 	public function __construct(IAssemblyHost $driverAssembly) {
 		parent::__construct($driverAssembly);
 
-		$this->_fab = $driverAssembly->getItem('coreFactory');
+		$this->_fab = $driverAssembly->getItem('baseFactory');
 		$this->_access = $driverAssembly->getItem('accessorFactory');
 		$this->_encoder = $driverAssembly->getItem('keyEncoder');
 		$this->_cache = $driverAssembly->getItem('instanceCache');

@@ -30,7 +30,7 @@ extends TestCase
 			->with($this->isType('string'))
 			->willReturnCallback(function($key) {
 				$map = [
-					'coreFactory' => \eve\common\factory\ICoreFactory::class,
+					'baseFactory' => \eve\common\factory\IBaseFactory::class,
 					'accessorFactory' => \eve\common\factory\ISimpleFactory::class,
 					'keyEncoder' => \eve\inject\cache\IKeyEncoder::class,
 					'instanceCache' => \eve\common\access\IItemMutator::class,
@@ -71,7 +71,7 @@ extends TestCase
 	public function testHasKey() {
 		$driver = $this->_produceDriver();
 
-		$this->assertTrue($driver->hasKey($driver::ITEM_CORE_FACTORY));
+		$this->assertTrue($driver->hasKey($driver::ITEM_BASE_FACTORY));
 		$this->assertTrue($driver->hasKey($driver::ITEM_ACCESSOR_FACTORY));
 		$this->assertTrue($driver->hasKey($driver::ITEM_KEY_ENCODER));
 		$this->assertTrue($driver->hasKey($driver::ITEM_INSTANCE_CACHE));
@@ -87,7 +87,7 @@ extends TestCase
 	public function testGetItem() {
 		$driver = $this->_produceDriver();
 
-		$this->assertInstanceOf(\eve\common\factory\ICoreFactory::class, $driver->getItem($driver::ITEM_CORE_FACTORY));
+		$this->assertInstanceOf(\eve\common\factory\IBaseFactory::class, $driver->getItem($driver::ITEM_BASE_FACTORY));
 		$this->assertInstanceOf(\eve\common\factory\ISimpleFactory::class, $driver->getItem($driver::ITEM_ACCESSOR_FACTORY));
 		$this->assertInstanceOf(\eve\inject\cache\IKeyEncoder::class, $driver->getItem($driver::ITEM_KEY_ENCODER));
 		$this->assertInstanceOf(\eve\common\access\IItemMutator::class, $driver->getItem($driver::ITEM_INSTANCE_CACHE));
@@ -127,7 +127,7 @@ extends TestCase
 	public function testGetBaseFactory() {
 		$driver = $this->_produceDriver();
 
-		$this->assertInstanceOf(\eve\common\factory\ICoreFactory::class, $driver->getCoreFactory());
+		$this->assertInstanceOf(\eve\common\factory\IBaseFactory::class, $driver->getBaseFactory());
 	}
 
 	public function testGetAccessorFactory() {

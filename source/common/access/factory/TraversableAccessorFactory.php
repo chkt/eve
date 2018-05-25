@@ -2,7 +2,7 @@
 
 namespace eve\common\access\factory;
 
-use eve\common\factory\ICoreFactory;
+use eve\common\factory\IBaseFactory;
 use eve\common\access\TraversableAccessor;
 use eve\common\access\operator\AItemAccessorSurrogate;
 
@@ -15,7 +15,7 @@ extends AItemAccessorSurrogate
 	private $_baseFactory;
 
 
-	public function __construct(ICoreFactory $baseFactory) {
+	public function __construct(IBaseFactory $baseFactory) {
 		$this->_baseFactory = $baseFactory;
 	}
 

@@ -6,8 +6,8 @@ use PHPUnit\Framework\TestCase;
 
 use eve\common\IFactory;
 use eve\common\base\IMethodProxy;
-use eve\common\factory\ICoreFactory;
-use eve\common\factory\CoreFactory;
+use eve\common\factory\IBaseFactory;
+use eve\common\factory\BaseFactory;
 
 
 
@@ -16,14 +16,14 @@ extends TestCase
 {
 
 	private function _produceFactory() {
-		return new CoreFactory();
+		return new BaseFactory();
 	}
 
 
 	public function testInheritance() {
 		$fab = $this->_produceFactory();
 
-		$this->assertInstanceOf(ICoreFactory::class, $fab);
+		$this->assertInstanceOf(IBaseFactory::class, $fab);
 		$this->assertInstanceOf(IMethodProxy::class, $fab);
 		$this->assertInstanceOf(IFactory::class, $fab);
 	}

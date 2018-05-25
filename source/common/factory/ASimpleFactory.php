@@ -10,11 +10,11 @@ abstract class ASimpleFactory
 implements ISimpleFactory
 {
 
-	private $_core;
+	private $_base;
 
 
-	public function __construct(ICoreFactory $core) {
-		$this->_core = $core;
+	public function __construct(IBaseFactory $base) {
+		$this->_base = $base;
 	}
 
 
@@ -22,13 +22,13 @@ implements ISimpleFactory
 		return [];
 	}
 
-	abstract protected function _produceInstance(ICoreFactory $core, array $config);
+	abstract protected function _produceInstance(IBaseFactory $base, array $config);
 
 
 	public function produce(array& $config = []) {
 		$defaults = $this->_getConfigDefaults();
-		$settings = $this->_core->callMethod(ArrayOperation::class, 'merge', [$defaults, $config]);
+		$settings = $this->_base->callMethod(ArrayOperation::class, 'merge', [$defaults, $config]);
 
-		return $this->_produceInstance($this->_core, $settings);
+		return $this->_produceInstance($this->_base, $settings);
 	}
 }

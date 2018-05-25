@@ -19,7 +19,7 @@ implements IInjector
 
 
 	public function __construct(IAssemblyHost $driverAssembly) {
-		$this->_baseFactory = $driverAssembly->getItem('coreFactory');
+		$this->_baseFactory = $driverAssembly->getItem('baseFactory');
 		$this->_accessorFactory = $driverAssembly->getItem('accessorFactory');		//TODO: can we use a single instance?
 
 		$this->_parser = $driverAssembly->getItem('entityParser');

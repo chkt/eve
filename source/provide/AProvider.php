@@ -2,7 +2,7 @@
 
 namespace eve\provide;
 
-use eve\common\factory\ICoreFactory;
+use eve\common\factory\IBaseFactory;
 use eve\common\access\ITraversableAccessor;
 use eve\inject\IInjectable;
 use eve\inject\IInjector;
@@ -21,19 +21,19 @@ implements IProvider
 			'data' => $driver->getItem('injector')
 		], [
 			'type' => IInjector::TYPE_ARGUMENT,
-			'data' => $driver->getItem('coreFactory')
+			'data' => $driver->getItem('baseFactory')
 		]];
 	}
 
 
 
 	private $_injector;
-	private $_coreFactory;
+	private $_baseFactory;
 
 
-	public function __construct(IInjector $injector, ICoreFactory $coreFactory) {
+	public function __construct(IInjector $injector, IBaseFactory $baseFactory) {
 		$this->_injector = $injector;
-		$this->_coreFactory = $coreFactory;
+		$this->_baseFactory = $baseFactory;
 	}
 
 
@@ -62,7 +62,7 @@ implements IProvider
 			return false;
 		}
 
-		return $this->_coreFactory->hasInterface($parts['qname'], IInjectable::class);
+		return $this->_baseFactory->hasInterface($parts['qname'], IInjectable::class);
 	}
 
 	public function getItem(string $key) {

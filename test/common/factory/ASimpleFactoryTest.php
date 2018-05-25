@@ -5,7 +5,7 @@ namespace test\common\factory;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\IFactory;
-use eve\common\factory\ICoreFactory;
+use eve\common\factory\IBaseFactory;
 use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ASimpleFactory;
 
@@ -15,25 +15,25 @@ final class ASimpleFactoryTest
 extends TestCase
 {
 
-	private function _mockCoreFactory() {
+	private function _mockBaseFactory() {
 		return $this
-			->getMockBuilder(ICoreFactory::class)
+			->getMockBuilder(IBaseFactory::class)
 			->getMock();
 	}
 
-	private function _mockFactory(callable $fn, ICoreFactory $core = null) {
-		if (is_null($core)) $core = $this->_mockCoreFactory();
+	private function _mockFactory(callable $fn, IBaseFactory $base = null) {
+		if (is_null($base)) $base = $this->_mockBaseFactory();
 
 		$ins = $this
 			->getMockBuilder(ASimpleFactory::class)
-			->setConstructorArgs([$core])
+			->setConstructorArgs([$base])
 			->setMethods([ '_produceInstance' ])
 			->getMockForAbstractClass();
 
 		$ins
 			->method('_produceInstance')
 			->with(
-				$this->isInstanceOf(ICoreFactory::class),
+				$this->isInstanceOf(IBaseFactory::class),
 				$this->isType('array')
 			)
 			->willReturnCallback($fn);
@@ -57,7 +57,7 @@ extends TestCase
 			'bar' => 2
 		];
 
-		$base = $this->_mockCoreFactory();
+		$base = $this->_mockBaseFactory();
 
 		$base
 			->method('callMethod')
@@ -73,7 +73,7 @@ extends TestCase
 				return $settings;
 			});
 
-		$factory = $this->_mockFactory(function(ICoreFactory $core, array $config) use ($settings) {
+		$factory = $this->_mockFactory(function(IBaseFactory $base, array $config) use ($settings) {
 			$this->assertEquals($settings, $config);
 
 			return 'foo';

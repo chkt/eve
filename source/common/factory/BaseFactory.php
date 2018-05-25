@@ -4,8 +4,8 @@ namespace eve\common\factory;
 
 
 
-final class CoreFactory
-implements ICoreFactory
+final class BaseFactory
+implements IBaseFactory
 {
 
 	public function hasInterface(string $qname, string $iname) : bool {

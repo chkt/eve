@@ -3,7 +3,7 @@
 namespace eve\inject\cache;
 
 use eve\common\access\ITraversableAccessor;
-use eve\common\factory\ICoreFactory;
+use eve\common\factory\IBaseFactory;
 use eve\inject\IInjectableIdentity;
 
 
@@ -15,8 +15,8 @@ implements IKeyEncoder
 	private $_baseFactory;
 
 
-	public function __construct(ICoreFactory $core) {
-		$this->_baseFactory = $core;
+	public function __construct(IBaseFactory $base) {
+		$this->_baseFactory = $base;
 	}
 
 

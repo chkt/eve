@@ -5,7 +5,7 @@ namespace test\inject;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\factory\ISimpleFactory;
-use eve\common\factory\ICoreFactory;
+use eve\common\factory\IBaseFactory;
 use eve\common\access\ITraversableAccessor;
 use eve\common\access\TraversableAccessor;
 use eve\common\assembly\IAssemblyHost;
@@ -92,9 +92,9 @@ extends TestCase
 	}
 
 
-	private function _mockFactory(array $map = []) : ICoreFactory {
+	private function _mockFactory(array $map = []) : IBaseFactory {
 		$ins = $this
-			->getMockBuilder(ICoreFactory::class)
+			->getMockBuilder(IBaseFactory::class)
 			->getMock();
 
 		$ins
@@ -143,7 +143,7 @@ extends TestCase
 	}
 
 	private function _mockDriverAssembly(
-		ICoreFactory $factory = null,
+		IBaseFactory $factory = null,
 		IEntityParser $parser = null,
 		ISimpleFactory $accessor = null,
 		IAssemblyHost $resolvers = null
@@ -161,7 +161,7 @@ extends TestCase
 			->method('getItem')
 			->with($this->isType('string'))
 			->willReturnCallback(function(string $key) use ($factory, $parser, $accessor, $resolvers) {
-				if ($key === 'coreFactory') return $factory;
+				if ($key === 'baseFactory') return $factory;
 				else if ($key === 'accessorFactory') return $accessor;
 				else if ($key === 'entityParser') return $parser;
 				else if ($key === 'resolverAssembly') return $resolvers;

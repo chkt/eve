@@ -5,7 +5,7 @@ namespace test\driver;
 use PHPUnit\Framework\TestCase;
 
 use eve\common\factory\ISimpleFactory;
-use eve\common\factory\ICoreFactory;
+use eve\common\factory\IBaseFactory;
 use eve\common\factory\ASimpleFactory;
 use eve\common\access\ITraversableAccessor;
 use eve\common\assembly\IAssemblyHost;
@@ -51,7 +51,7 @@ extends TestCase
 
 		$assembly
 			->method('getItem')
-			->with($this->equalTo('coreFactory'))
+			->with($this->equalTo('baseFactory'))
 			->willReturn($assembly->p0);
 
 		return $assembly;
@@ -64,7 +64,7 @@ extends TestCase
 		};
 
 		$base = $this
-			->getMockBuilder(ICoreFactory::class)
+			->getMockBuilder(IBaseFactory::class)
 			->getMock();
 
 		$base
@@ -101,7 +101,7 @@ extends TestCase
 	}
 
 
-	private function _produceDriverFactory(ICoreFactory $base = null) {
+	private function _produceDriverFactory(IBaseFactory $base = null) {
 		if (is_null($base)) $base = $this->_mockBaseFactory();
 
 		return new InjectorDriverFactory($base);
@@ -140,11 +140,11 @@ extends TestCase
 		$this->assertObjectHasAttribute('p0', $driver);
 		$this->assertInstanceOf(IAssemblyHost::class, $driver->p0);
 		$this->assertObjectHasAttribute('p0', $driver->p0);
-		$this->assertInstanceOf(ICoreFactory::class, $driver->p0->p0);
+		$this->assertInstanceOf(IBaseFactory::class, $driver->p0->p0);
 		$this->assertObjectHasAttribute('p1', $driver->p0);
 		$this->assertInstanceOf(ISimpleFactory::class, $driver->p0->p1);
 		$this->assertObjectHasAttribute('p0', $driver->p0->p1);
-		$this->assertInstanceOf(ICoreFactory::class, $driver->p0->p1->p0);
+		$this->assertInstanceOf(IBaseFactory::class, $driver->p0->p1->p0);
 		$this->assertObjectHasAttribute('p2', $driver->p0);
 		$this->assertInstanceOf(ITraversableAccessor::class, $driver->p0->p2);
 		$this->assertObjectHasAttribute('p0', $driver->p0->p2);

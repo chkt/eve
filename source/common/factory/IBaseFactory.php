@@ -7,7 +7,7 @@ use eve\common\base\IMethodProxy;
 
 
 
-interface ICoreFactory
+interface IBaseFactory
 extends IFactory, IMethodProxy
 {
 

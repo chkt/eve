@@ -38,16 +38,16 @@ The injector depends on a couple of helpers to resolve and inject dependencies.
 All of these are combined into the `InjectorDriver`.
 
 ```php
-use \eve\common\factory\CoreFactory;
+use \eve\common\factory\BaseFactory;
 use \eve\driver\InjectorDriverFactory;
 
-$core = new CoreFactory();
-$factory = $core->newInstance(InjectorDriverFactory::class, [ $core ]);
+$base = new BaseFactory();
+$factory = $base->newInstance(InjectorDriverFactory::class, [ $base ]);
 $driver = $factory->produce([...]);
 ```
 
-The *first* line creates the `CoreFactory`, which supplies the basic means of instantiating objects.
-In the *second* line the CoreFactory is used to create the `InjectorDriverFactory`,
+The *first* line creates the `BaseFactory`, which supplies the basic means of instantiating objects.
+In the *second* line the BaseFactory is used to create the `InjectorDriverFactory`,
 which in line *three* creates the `InjectorDriver`.
 
 The types of injectable objects depend on the configuration of the driver.

@@ -2,7 +2,7 @@
 
 namespace eve\driver;
 
-use eve\common\factory\ICoreFactory;
+use eve\common\factory\IBaseFactory;
 use eve\common\factory\ISimpleFactory;
 use eve\common\factory\ASimpleFactory;
 use eve\common\access\ITraversableAccessor;
@@ -28,11 +28,11 @@ extends ASimpleFactory
 	}
 
 
-	protected function _produceAccessorFactory(ICoreFactory $base, array $config) : ISimpleFactory {
+	protected function _produceAccessorFactory(IBaseFactory $base, array $config) : ISimpleFactory {
 		return $base->newInstance(\eve\common\access\factory\TraversableAccessorFactory::class, [ $base ]);
 	}
 
-	protected function _produceAssembly(ICoreFactory $base, ISimpleFactory $access, ITraversableAccessor $config) : IAssemblyHost {
+	protected function _produceAssembly(IBaseFactory $base, ISimpleFactory $access, ITraversableAccessor $config) : IAssemblyHost {
 		return $base->newInstance(\eve\driver\InjectorDriverAssembly::class, [
 			$base,
 			$access,
@@ -42,14 +42,14 @@ extends ASimpleFactory
 
 	protected function _produceDriver(IAssemblyHost $assembly) : IInjectorDriver {
 		return $assembly
-			->getItem('coreFactory')
+			->getItem('baseFactory')
 			->newInstance(\eve\driver\InjectorDriver::class, [
 				$assembly
 			]);
 	}
 
 
-	protected function _produceInstance(ICoreFactory $base, array $config) {
+	protected function _produceInstance(IBaseFactory $base, array $config) {
 		$access = $this->_produceAccessorFactory($base, $config);
 		$data = $access->produce($config);
 
