@@ -187,6 +187,8 @@ extends TestCase
 		$injector = $this->_produceInjector();
 
 		$this->assertInstanceOf(IInjector::class, $injector);
+		$this->assertInstanceOf(\eve\common\factory\IInstancingFactory::class, $injector);
+		$this->assertInstanceOf(\eve\common\IFactory::class, $injector);
 	}
 
 
