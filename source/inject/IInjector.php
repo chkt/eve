@@ -2,9 +2,12 @@
 
 namespace eve\inject;
 
+use eve\common\factory\IInstancingFactory;
+
 
 
 interface IInjector
+extends IInstancingFactory
 {
 
 	const TYPE_ARGUMENT = 'argument';
@@ -12,8 +15,4 @@ interface IInjector
 	const TYPE_INJECTOR = 'injector';
 	const TYPE_LOCATOR = 'locator';
 	const TYPE_FACTORY = 'factory';
-
-
-
-	public function produce(string $qname, array $config = []);
 }
