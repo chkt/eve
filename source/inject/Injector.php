@@ -53,7 +53,7 @@ implements IInjector
 		$deps = $base->callMethod($qname, 'getDependencyConfig', [ $access ]);
 		$args = $this->_resolveDependencies($deps);
 
-		return $base->newInstance($qname, $args);
+		return $base->produce($qname, $args);
 	}
 
 

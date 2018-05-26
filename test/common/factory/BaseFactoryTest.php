@@ -24,6 +24,7 @@ extends TestCase
 		$fab = $this->_produceFactory();
 
 		$this->assertInstanceOf(IBaseFactory::class, $fab);
+		$this->assertInstanceOf(\eve\common\factory\IInstancingFactory::class, $fab);
 		$this->assertInstanceOf(IMethodProxy::class, $fab);
 		$this->assertInstanceOf(IFactory::class, $fab);
 	}
@@ -55,9 +56,9 @@ extends TestCase
 	}
 
 
-	public function testNewInstance() {
+	public function testProduce() {
 		$fab = $this->_produceFactory();
-		$ins = $fab->newInstance(TestClass::class, ['1', '2', '3']);
+		$ins = $fab->produce(TestClass::class, ['1', '2', '3']);
 
 		$this->assertInstanceOf(TestClass::class, $ins);
 		$this->assertEquals('1', $ins->foo);

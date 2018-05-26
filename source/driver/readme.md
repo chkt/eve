@@ -8,7 +8,7 @@ use eve\common\factory\BaseFactory;
 use eve\driver\InjectorDriverFactory;
 
 $base = new BaseFactory();
-$factory = $base->newInstance(InjectorDriverFactory::class, [ $base ]);
+$factory = $base->produce(InjectorDriverFactory::class, [ $base ]);
 $driver = $factory->produce();
 ```
 

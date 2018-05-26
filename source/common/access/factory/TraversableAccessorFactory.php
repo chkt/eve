@@ -21,6 +21,6 @@ extends AItemAccessorSurrogate
 
 
 	public function produce(array& $data = []) : TraversableAccessor {
-		return $this->_baseFactory->newInstance(TraversableAccessor::class, [ & $data ]);
+		return $this->_baseFactory->produce(TraversableAccessor::class, [ & $data ]);
 	}
 }

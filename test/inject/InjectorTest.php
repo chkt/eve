@@ -98,7 +98,6 @@ extends TestCase
 			->getMock();
 
 		$ins
-			->expects($this->any())
 			->method('hasInterface')
 			->with($this->isType('string'), $this->isType('string'))
 			->willReturnCallback(function(string $qname, string $iname) use ($map) {
@@ -106,7 +105,6 @@ extends TestCase
 			});
 
 		$ins
-			->expects($this->any())
 			->method('callMethod')
 			->with($this->isType('string'), $this->isType('string'), $this->isType('array'))
 			->willReturnCallback(function(string $qname, string $method, array $args) use ($map) {
@@ -116,8 +114,7 @@ extends TestCase
 			});
 
 		$ins
-			->expects($this->any())
-			->method('newInstance')
+			->method('produce')
 			->with($this->isType('string'), $this->isType('array'))
 			->willReturnCallback(function(string $qname, array $args) use ($map) {
 				return $map[$qname]->construct(...$args);

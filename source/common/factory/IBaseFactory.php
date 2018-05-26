@@ -2,16 +2,13 @@
 
 namespace eve\common\factory;
 
-use eve\common\IFactory;
 use eve\common\base\IMethodProxy;
 
 
 
 interface IBaseFactory
-extends IFactory, IMethodProxy
+extends IInstancingFactory, IMethodProxy
 {
 
 	public function hasInterface(string $qname, string $iname) : bool;
-
-	public function newInstance(string $qname, array $args = []);
 }

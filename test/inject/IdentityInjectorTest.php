@@ -80,7 +80,7 @@ extends TestCase
 
 		$ins
 			->expects($this->any())
-			->method('newInstance')
+			->method('produce')
 			->with(
 				$this->logicalAnd(
 					$this->isType('string'),

@@ -18,7 +18,7 @@ implements IBaseFactory
 	}
 
 
-	public function newInstance(string $qname, array $args = []) {
+	public function produce(string $qname, array $args = []) {
 		return new $qname(...$args);
 	}
 }

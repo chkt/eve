@@ -37,7 +37,7 @@ extends TestCase
 		$base = $this->_mockInterface(IBaseFactory::class);
 
 		$base
-			->method('newInstance')
+			->method('produce')
 			->with(
 				$this->isType('string'),
 				$this->logicalOr(

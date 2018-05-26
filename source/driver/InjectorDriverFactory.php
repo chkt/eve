@@ -29,11 +29,11 @@ extends ASimpleFactory
 
 
 	protected function _produceAccessorFactory(IBaseFactory $base, array $config) : ISimpleFactory {
-		return $base->newInstance(\eve\common\access\factory\TraversableAccessorFactory::class, [ $base ]);
+		return $base->produce(\eve\common\access\factory\TraversableAccessorFactory::class, [ $base ]);
 	}
 
 	protected function _produceAssembly(IBaseFactory $base, ISimpleFactory $access, ITraversableAccessor $config) : IAssemblyHost {
-		return $base->newInstance(\eve\driver\InjectorDriverAssembly::class, [
+		return $base->produce(\eve\driver\InjectorDriverAssembly::class, [
 			$base,
 			$access,
 			$config
@@ -43,7 +43,7 @@ extends ASimpleFactory
 	protected function _produceDriver(IAssemblyHost $assembly) : IInjectorDriver {
 		return $assembly
 			->getItem('baseFactory')
-			->newInstance(\eve\driver\InjectorDriver::class, [
+			->produce(\eve\driver\InjectorDriver::class, [
 				$assembly
 			]);
 	}

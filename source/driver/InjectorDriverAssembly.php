@@ -47,25 +47,25 @@ extends ASingularHost
 	protected function _produceKeyEncoder(ITraversableAccessor $config) : IKeyEncoder {
 		$base = $this->getItem('baseFactory');
 
-		return $base->newInstance(\eve\inject\cache\KeyEncoder::class, [ $base ]);
+		return $base->produce(\eve\inject\cache\KeyEncoder::class, [ $base ]);
 	}
 
 	protected function _produceInstanceCache(ITraversableAccessor $config) : IItemMutator {
 		return $this
 			->getItem('baseFactory')
-			->newInstance(\eve\common\access\TraversableMutator::class, [ [] ]);
+			->produce(\eve\common\access\TraversableMutator::class, [ [] ]);
 	}
 
 	protected function _produceInjector(ITraversableAccessor $config) : IInjector {
 		return $this
 			->getItem('baseFactory')
-			->newInstance(\eve\inject\IdentityInjector::class, [ $this ]);
+			->produce(\eve\inject\IdentityInjector::class, [ $this ]);
 	}
 
 	protected function _produceResolverAssembly(ITraversableAccessor $config) : IAssemblyHost {
 		return $this
 			->getItem('baseFactory')
-			->newInstance(\eve\inject\resolve\ResolverAssembly::class, [
+			->produce(\eve\inject\resolve\ResolverAssembly::class, [
 				$this,
 				$this
 					->getItem('accessorFactory')
@@ -76,7 +76,7 @@ extends ASingularHost
 	protected function _produceEntityParser(ITraversableAccessor $config) : IEntityParser {
 		return $this
 			->getItem('baseFactory')
-			->newInstance(\eve\entity\EntityParser::class);
+			->produce(\eve\entity\EntityParser::class);
 	}
 
 	protected function _produceLocator(ITraversableAccessor $config) : ILocator {
@@ -90,7 +90,7 @@ extends ASingularHost
 	protected function _produceProviderAssembly(ITraversableAccessor $config) : IItemAccessor {
 		return $this
 			->getItem('baseFactory')
-			->newInstance(\eve\provide\ProviderAssembly::class, [
+			->produce(\eve\provide\ProviderAssembly::class, [
 				$this,
 				$this
 					->getItem('accessorFactory')

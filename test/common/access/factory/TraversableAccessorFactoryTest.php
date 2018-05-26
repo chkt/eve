@@ -21,7 +21,7 @@ extends TestCase
 
 		$ins
 			->expects($this->any())
-			->method('newInstance')
+			->method('produce')
 			->with($this->equalTo(TraversableAccessor::class), $this->isType('array'))
 			->willReturnCallback(function(string $qname, array $args) {
 				return new $qname($args[0]);
